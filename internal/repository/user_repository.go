@@ -44,7 +44,8 @@ func (r *userRepository) GetAll() ([]model.UserModel, error) {
 
 func (r *userRepository) GetByID(userID uint) (*model.UserModel, error) {
 	var user model.UserModel
-	err := r.db.QueryRow("SELECT id, nama, alamat FROM users WHERE id = ?", userID).
+	err := r.db.
+		QueryRow("SELECT id, nama, alamat FROM users WHERE id = ?", userID).
 		Scan(&user.ID, &user.Nama, &user.Alamat)
 	if err != nil {
 		return nil, err
