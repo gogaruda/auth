@@ -1,0 +1,8 @@
+### Ambil semua data
+GET http://localhost:8080/api/user
+##
+
+##
+### Ambil data BY ID
+GET http://localhost:8080/api/user/100
+##
