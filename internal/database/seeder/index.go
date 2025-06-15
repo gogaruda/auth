@@ -1,7 +1,10 @@
 package seeder
 
+import "sql/pkg/system/config"
+
 func SeedRun() error {
-	if err := UserSeed(); err != nil {
+	db := config.DB
+	if err := UserSeed(db); err != nil {
 		return err
 	}
 
