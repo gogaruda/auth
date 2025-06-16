@@ -4,7 +4,8 @@ import "sql/pkg/system/config"
 
 func SeedRun() error {
 	db := config.DB
-	if err := UserSeed(db); err != nil {
+
+	if err := User_roles(db); err != nil {
 		return err
 	}
 

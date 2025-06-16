@@ -5,7 +5,7 @@ migrate create -ext sql -dir internal/database/migrations -seq create_users_tabl
 
 ### Jalankan Migrasi
 ```cmd
-make db:migrate
+go run ./cmd/migrate/main.go
 ```
 
 ### Buat File Seeder
