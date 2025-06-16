@@ -29,7 +29,7 @@ func (r *userRepository) GetAll() ([]model.UserModel, error) {
 
 	for rows.Next() {
 		var user model.UserModel
-		if err := rows.Scan(&user.ID, &user.Nama, &user.Alamat); err != nil {
+		if err := rows.Scan(&user.ID, &user.Username, &user.Email); err != nil {
 			return nil, err
 		}
 		users = append(users, user)
@@ -46,7 +46,7 @@ func (r *userRepository) GetByID(userID uint) (*model.UserModel, error) {
 	var user model.UserModel
 	err := r.db.
 		QueryRow("SELECT id, nama, alamat FROM users WHERE id = ?", userID).
-		Scan(&user.ID, &user.Nama, &user.Alamat)
+		Scan(&user.ID, &user.Username, &user.Email)
 	if err != nil {
 		return nil, err
 	}

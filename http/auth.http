@@ -1,0 +1,9 @@
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{
+    "identifier": "super-admin-1",
+    "password": "super-admin-1"
+}
+
+###
