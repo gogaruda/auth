@@ -8,7 +8,7 @@ import (
 
 type AuthRepository interface {
 	IdentifierCheck(identifier string) (*model.UserModel, error)
-	UpdateTokenVersion(userID string) error
+	UpdateTokenVersion(userID string) (string, error)
 }
 
 type authRepository struct {
@@ -63,11 +63,12 @@ func (r *authRepository) IdentifierCheck(identifier string) (*model.UserModel, e
 	return &user, nil
 }
 
-func (r *authRepository) UpdateTokenVersion(userID string) error {
-	_, err := r.db.Exec("UPDATE users SET token_version = ? WHERE id = ?", utils.NewULID(), userID)
+func (r *authRepository) UpdateTokenVersion(userID string) (string, error) {
+	newVersion := utils.NewULID()
+	_, err := r.db.Exec("UPDATE users SET token_version = ? WHERE id = ?", newVersion, userID)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return newVersion, nil
 }

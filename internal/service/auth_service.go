@@ -30,14 +30,11 @@ func (s *authService) Login(request request.AuthLoginRequest) (string, error) {
 		roleNames = append(roleNames, role.Name)
 	}
 
-	if err := s.repo.UpdateTokenVersion(user.ID); err != nil {
-		return "", err
-	}
-
-	token, err := utils.GenerateJWT(user.ID, roleNames)
+	newTokenVersion, err := s.repo.UpdateTokenVersion(user.ID)
 	if err != nil {
 		return "", err
 	}
+	token, err := utils.GenerateJWT(user.ID, newTokenVersion, roleNames)
 
 	return token, err
 }
