@@ -1,14 +1,15 @@
 package service
 
 import (
-	"errors"
-	"sql/internal/model"
+	"sql/internal/dto/request"
+	"sql/internal/dto/response"
 	"sql/internal/repository"
 )
 
 type UserService interface {
-	GetAll() ([]model.UserModel, error)
-	GetByID(userID uint) (*model.UserModel, error)
+	GetAll() ([]response.UserResponse, error)
+	GetByID(userID string) (*response.UserResponse, error)
+	UpdateUser(req request.UpdateUserRequest) error
 }
 
 type userService struct {
@@ -19,15 +20,24 @@ func NewUserService(r repository.UserRepository) UserService {
 	return &userService{repo: r}
 }
 
-func (s *userService) GetAll() ([]model.UserModel, error) {
-	return s.repo.GetAll()
+func (s *userService) GetAll() ([]response.UserResponse, error) {
+	users, err := s.repo.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }
 
-func (s *userService) GetByID(userID uint) (*model.UserModel, error) {
+func (s *userService) GetByID(userID string) (*response.UserResponse, error) {
 	user, err := s.repo.GetByID(userID)
 	if err != nil {
-		return nil, errors.New("Data tidak ditemukan")
+		return nil, err
 	}
 
 	return user, nil
+}
+
+func (s *userService) UpdateUser(req request.UpdateUserRequest) error {
+	return s.repo.Update(req)
 }

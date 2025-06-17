@@ -12,6 +12,7 @@ func InitRouter(r *gin.Engine, app *container.AppService) {
 	r.Use(middleware.CORSMiddleware())
 
 	authHandler := handler.NewAuthHandler(app.AuthService)
+	userHandler := handler.NewUserHandler(app.UserService)
 
 	api := r.Group("/api")
 	api.POST("/login", authHandler.Login)
@@ -27,8 +28,8 @@ func InitRouter(r *gin.Engine, app *container.AppService) {
 	superAdmin := auth.Group("/")
 	superAdmin.Use(middleware.RoleMiddleware(middleware.MatchAny, "super-admin"))
 	{
-		superAdmin.GET("/coba-super-admin", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{"message": "Selamat datang super admin"})
-		})
+		superAdmin.GET("/users", userHandler.GetAllUsers)
+		superAdmin.GET("/users/:id", userHandler.GetUserByID)
+		superAdmin.PUT("/users/:id", userHandler.UpdateUser)
 	}
 }

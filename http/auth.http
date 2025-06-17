@@ -20,9 +20,9 @@ POST http://localhost:8080/api/register
 Content-Type: application/json
 
 {
-    "username": "tamu-1",
-    "email": "tamu-1@gmail.com",
-    "password": "tamu-1"
+    "username": "tamu-2",
+    "email": "tamu-2@gmail.com",
+    "password": "tamu-2"
 }
 
 ### Logout
