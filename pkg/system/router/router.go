@@ -21,4 +21,12 @@ func InitRouter(r *gin.Engine, app *container.AppService) {
 	auth.GET("/coba-auth", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "Yee, Anda berhasil login!"})
 	})
+
+	superAdmin := auth.Group("/")
+	superAdmin.Use(middleware.RoleMiddleware(middleware.MatchAny, "super-admin"))
+	{
+		superAdmin.GET("/coba-super-admin", func(c *gin.Context) {
+			c.JSON(http.StatusOK, gin.H{"message": "Selamat datang super admin"})
+		})
+	}
 }

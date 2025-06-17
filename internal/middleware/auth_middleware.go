@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
@@ -74,9 +73,6 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User tidak ditemukan!"})
 			return
 		}
-
-		fmt.Println("Hasil query: ", user.TokenVersion)
-		fmt.Println("Dari hasil login: ", tokenVersion)
 
 		if user.TokenVersion != tokenVersion {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Token sudah tidak berlaku, silahkan login lagi!"})
