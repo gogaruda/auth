@@ -1,10 +1,10 @@
 ### Coba roleMiddleware super admin
 GET http://localhost:8080/api/coba-super-admin
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAyNDA2NjAsImlhdCI6MTc1MDE1NDI2MCwicm9sZXMiOlsic3VwZXItYWRtaW4iXSwidG9rZW5fdmVyc2lvbiI6IjAxSlhZTjVDREZNU0NBWDdHOFlKWEFLNjdSIiwidXNlcl9pZCI6IjAxSlhXS0pNS0pCUjlFRlpYUU5ZMlRRR0tZIn0.B6_ZqZ7SDrRocElxUZ8bYZEJQlHVnKD7-XyKuZ4QUAQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAyNDgwMjMsImlhdCI6MTc1MDE2MTYyMywicm9sZXMiOlsic3VwZXItYWRtaW4iXSwidG9rZW5fdmVyc2lvbiI6IjAxSlhZVzYySk0xN0Y2TTdCRlRaWlg3NkNGIiwidXNlcl9pZCI6IjAxSlhZVDlZWjRLUjYzRFEzOVo2OE4zN1JLIn0.oN18_8jFwJDqGM1yzeQFkfX7hUXj5Bq-HYj-zeacDA4
 
 ### Coba Auth
 GET http://localhost:8080/api/coba-auth
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAyNDA2NjAsImlhdCI6MTc1MDE1NDI2MCwicm9sZXMiOlsic3VwZXItYWRtaW4iXSwidG9rZW5fdmVyc2lvbiI6IjAxSlhZTjVDREZNU0NBWDdHOFlKWEFLNjdSIiwidXNlcl9pZCI6IjAxSlhXS0pNS0pCUjlFRlpYUU5ZMlRRR0tZIn0.B6_ZqZ7SDrRocElxUZ8bYZEJQlHVnKD7-XyKuZ4QUAQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAyNDgwMjMsImlhdCI6MTc1MDE2MTYyMywicm9sZXMiOlsic3VwZXItYWRtaW4iXSwidG9rZW5fdmVyc2lvbiI6IjAxSlhZVzYySk0xN0Y2TTdCRlRaWlg3NkNGIiwidXNlcl9pZCI6IjAxSlhZVDlZWjRLUjYzRFEzOVo2OE4zN1JLIn0.oN18_8jFwJDqGM1yzeQFkfX7hUXj5Bq-HYj-zeacDA4
 
 ### Login
 POST http://localhost:8080/api/login
@@ -15,3 +15,16 @@ Content-Type: application/json
     "password": "super-admin-1"
 }
 
+### Registrasi
+POST http://localhost:8080/api/register
+Content-Type: application/json
+
+{
+    "username": "tamu-1",
+    "email": "tamu-1@gmail.com",
+    "password": "tamu-1"
+}
+
+### Logout
+POST http://localhost:8080/api/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAyNDgwMjMsImlhdCI6MTc1MDE2MTYyMywicm9sZXMiOlsic3VwZXItYWRtaW4iXSwidG9rZW5fdmVyc2lvbiI6IjAxSlhZVzYySk0xN0Y2TTdCRlRaWlg3NkNGIiwidXNlcl9pZCI6IjAxSlhZVDlZWjRLUjYzRFEzOVo2OE4zN1JLIn0.oN18_8jFwJDqGM1yzeQFkfX7hUXj5Bq-HYj-zeacDA4

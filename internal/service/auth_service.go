@@ -9,6 +9,8 @@ import (
 
 type AuthService interface {
 	Login(request request.AuthLoginRequest) (string, error)
+	Register(req request.AuthRegisterRequest) error
+	Logout(userID string) error
 }
 
 type authService struct {
@@ -37,4 +39,39 @@ func (s *authService) Login(request request.AuthLoginRequest) (string, error) {
 	token, err := utils.GenerateJWT(user.ID, newTokenVersion, roleNames)
 
 	return token, err
+}
+
+func (s *authService) Register(req request.AuthRegisterRequest) error {
+	// Cek username
+	exists, err := s.repo.IsUsernameExists(req.Username)
+	if err != nil {
+		return errors.New("Kesalahan server")
+	}
+	if exists {
+		return errors.New("Username sudah terdaftar")
+	}
+
+	// Cek email
+	existsEmail, errEmail := s.repo.IsEmailExists(req.Email)
+	if errEmail != nil {
+		return errors.New("Kesalahan server")
+	}
+	if existsEmail {
+		return errors.New("Email sudah terdaftar")
+	}
+
+	// Create user
+	if err := s.repo.Create(req); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *authService) Logout(userID string) error {
+	_, err := s.repo.UpdateTokenVersion(userID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

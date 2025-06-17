@@ -29,11 +29,12 @@ func User_roles(db *sql.DB) error {
 	}
 
 	_, err = tx.Exec(`INSERT INTO roles (id, name) VALUES 
-		(?, ?), (?, ?), (?, ?), (?, ?)`,
+		(?, ?), (?, ?), (?, ?), (?, ?), (?, ?)`,
 		superAdminRoleID, "super-admin",
 		utils.NewULID(), "admin",
 		utils.NewULID(), "editor",
 		utils.NewULID(), "penulis",
+		utils.NewULID(), "tamu",
 	)
 	if err != nil {
 		return err
