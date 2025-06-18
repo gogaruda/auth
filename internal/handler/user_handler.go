@@ -5,6 +5,7 @@ import (
 	"github.com/gogaruda/auth/internal/dto/request"
 	"github.com/gogaruda/auth/internal/service"
 	"github.com/gogaruda/auth/pkg/apperror"
+	"github.com/gogaruda/auth/pkg/response"
 	"net/http"
 )
 
@@ -23,12 +24,7 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"status":  "success",
-		"message": "Data berhasil diambil",
-		"data":    users,
-	})
+	response.OK(c, users, "query ok", nil)
 }
 
 func (h *UserHandler) CreateUser(c *gin.Context) {
@@ -43,7 +39,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Tambah data baru berhasil"})
+	response.Created(c, nil, "query ok")
 }
 
 func (h *UserHandler) GetUserByID(c *gin.Context) {
@@ -53,7 +49,8 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 		apperror.HandleHTTPError(c, err)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"data": user})
+
+	response.OK(c, user, "query ok", nil)
 }
 
 func (h *UserHandler) UpdateUser(c *gin.Context) {
@@ -69,7 +66,7 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Update berhasil!"})
+	response.Created(c, nil, "query ok")
 }
 
 func (h *UserHandler) DeleteUser(c *gin.Context) {
@@ -78,5 +75,6 @@ func (h *UserHandler) DeleteUser(c *gin.Context) {
 		apperror.HandleHTTPError(c, err)
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"message": "Data berhasil dihapus"})
+
+	response.NoContent(c)
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/gogaruda/auth/internal/dto/request"
 	"github.com/gogaruda/auth/internal/service"
 	"github.com/gogaruda/auth/pkg/apperror"
+	"github.com/gogaruda/auth/pkg/response"
 	"net/http"
 )
 
@@ -29,9 +30,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"token": token,
-	})
+	response.OK(c, nil, token, nil)
 }
 
 func (h *AuthHandler) Register(c *gin.Context) {
@@ -46,7 +45,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "Registrasi berhasil"})
+	response.Created(c, nil, "query ok")
 }
 
 func (h *AuthHandler) Logout(c *gin.Context) {
@@ -61,5 +60,5 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": "Logout berhasil"})
+	response.NoContent(c)
 }
