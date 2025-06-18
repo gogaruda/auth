@@ -58,6 +58,10 @@ func (s *userService) UpdateUser(userID string, req request.UpdateUserRequest) e
 		return err
 	}
 
+	if err := s.repo.IsRoleExists(req.RoleIDs); err != nil {
+		return err
+	}
+
 	return s.repo.Update(user.ID, req)
 }
 
