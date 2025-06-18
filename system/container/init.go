@@ -3,7 +3,7 @@ package container
 import (
 	"github.com/gogaruda/auth/internal/repository"
 	"github.com/gogaruda/auth/internal/service"
-	config2 "github.com/gogaruda/auth/system/config"
+	"github.com/gogaruda/auth/system/config"
 )
 
 type AppService struct {
@@ -12,9 +12,9 @@ type AppService struct {
 }
 
 func InitApp() *AppService {
-	config2.LoadENV()
-	config2.ConnectDB()
-	db := config2.DB
+	config.LoadENV()
+	config.ConnectDB()
+	db := config.DB
 
 	authRepository := repository.NewAuthRepository(db)
 	userRepository := repository.NewUserRepository(db)
