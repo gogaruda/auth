@@ -6,21 +6,22 @@ import (
 	"github.com/gogaruda/auth/internal/service"
 	"github.com/gogaruda/auth/pkg/apperror"
 	"github.com/gogaruda/auth/pkg/response"
+	"github.com/gogaruda/auth/pkg/validates"
 	"net/http"
 )
 
 type AuthHandler struct {
-	service service.AuthService
+	service   service.AuthService
+	Validator *validates.Validates
 }
 
-func NewAuthHandler(h service.AuthService) *AuthHandler {
-	return &AuthHandler{service: h}
+func NewAuthHandler(h service.AuthService, v *validates.Validates) *AuthHandler {
+	return &AuthHandler{service: h, Validator: v}
 }
 
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req request.AuthLoginRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if !h.Validator.ValidateJSON(c, &req) {
 		return
 	}
 
@@ -35,8 +36,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 func (h *AuthHandler) Register(c *gin.Context) {
 	var req request.AuthRegisterRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	if !h.Validator.ValidateJSON(c, &req) {
 		return
 	}
 

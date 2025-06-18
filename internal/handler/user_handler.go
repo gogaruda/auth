@@ -6,15 +6,16 @@ import (
 	"github.com/gogaruda/auth/internal/service"
 	"github.com/gogaruda/auth/pkg/apperror"
 	"github.com/gogaruda/auth/pkg/response"
-	"net/http"
+	"github.com/gogaruda/auth/pkg/validates"
 )
 
 type UserHandler struct {
-	service service.UserService
+	service   service.UserService
+	Validator *validates.Validates
 }
 
-func NewUserHandler(s service.UserService) *UserHandler {
-	return &UserHandler{service: s}
+func NewUserHandler(s service.UserService, v *validates.Validates) *UserHandler {
+	return &UserHandler{service: s, Validator: v}
 }
 
 func (h *UserHandler) GetAllUsers(c *gin.Context) {
@@ -29,8 +30,7 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 
 func (h *UserHandler) CreateUser(c *gin.Context) {
 	var req request.CreateUserRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if !h.Validator.ValidateJSON(c, &req) {
 		return
 	}
 
@@ -56,8 +56,7 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 func (h *UserHandler) UpdateUser(c *gin.Context) {
 	var userID = c.Param("id")
 	var req request.UpdateUserRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if !h.Validator.ValidateJSON(c, &req) {
 		return
 	}
 

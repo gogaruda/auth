@@ -12,7 +12,7 @@ Content-Type: application/json
 
 {
     "identifier": "super-admin-1",
-    "password": "super-admin-1"
+    "password": ""
 }
 
 ### Registrasi

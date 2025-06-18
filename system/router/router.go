@@ -2,8 +2,10 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/gogaruda/auth/internal/handler"
 	"github.com/gogaruda/auth/internal/middleware"
+	"github.com/gogaruda/auth/pkg/validates"
 	"github.com/gogaruda/auth/system/container"
 	"net/http"
 )
@@ -11,8 +13,11 @@ import (
 func InitRouter(r *gin.Engine, app *container.AppService) {
 	r.Use(middleware.CORSMiddleware())
 
-	authHandler := handler.NewAuthHandler(app.AuthService)
-	userHandler := handler.NewUserHandler(app.UserService)
+	v := validator.New()
+	valid := validates.NewValidates(v)
+
+	authHandler := handler.NewAuthHandler(app.AuthService, valid)
+	userHandler := handler.NewUserHandler(app.UserService, valid)
 
 	api := r.Group("/api")
 	api.POST("/login", authHandler.Login)
