@@ -9,7 +9,7 @@ import (
 type UserRepository interface {
 	GetAll() ([]response.UserResponse, error)
 	GetByID(userID string) (*response.UserResponse, error)
-	Update(req request.UpdateUserRequest) error
+	Update(userID string, req request.UpdateUserRequest) error
 }
 
 type userRepository struct {
@@ -120,7 +120,7 @@ func (r *userRepository) GetByID(userID string) (*response.UserResponse, error) 
 	return user, nil
 }
 
-func (r *userRepository) Update(req request.UpdateUserRequest) error {
+func (r *userRepository) Update(userID string, req request.UpdateUserRequest) error {
 	tx, err := r.db.Begin()
 	if err != nil {
 		return err
@@ -134,12 +134,12 @@ func (r *userRepository) Update(req request.UpdateUserRequest) error {
 	}()
 
 	_, err = tx.Exec(`UPDATE users SET username = ?, email = ? WHERE id = ?`,
-		req.Username, req.Email, req.ID)
+		req.Username, req.Email, userID)
 	if err != nil {
 		return err
 	}
 
-	_, err = tx.Exec(`DELETE FROM user_roles WHERE user_id = ?`, req.ID)
+	_, err = tx.Exec(`DELETE FROM user_roles WHERE user_id = ?`, userID)
 	if err != nil {
 		return err
 	}
@@ -151,7 +151,7 @@ func (r *userRepository) Update(req request.UpdateUserRequest) error {
 	defer stmt.Close()
 
 	for _, roleID := range req.RoleIDs {
-		if _, err := stmt.Exec(req.ID, roleID); err != nil {
+		if _, err := stmt.Exec(userID, roleID); err != nil {
 			return err
 		}
 	}

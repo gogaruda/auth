@@ -45,15 +45,17 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 }
 
 func (h *UserHandler) UpdateUser(c *gin.Context) {
+	var userID = c.Param("id")
 	var req request.UpdateUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := h.service.UpdateUser(req); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	if err := h.service.UpdateUser(userID, req); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{})
+	c.JSON(http.StatusCreated, gin.H{"message": "Update berhasil!"})
 }

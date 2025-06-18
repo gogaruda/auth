@@ -9,7 +9,7 @@ import (
 type UserService interface {
 	GetAll() ([]response.UserResponse, error)
 	GetByID(userID string) (*response.UserResponse, error)
-	UpdateUser(req request.UpdateUserRequest) error
+	UpdateUser(userID string, req request.UpdateUserRequest) error
 }
 
 type userService struct {
@@ -38,6 +38,11 @@ func (s *userService) GetByID(userID string) (*response.UserResponse, error) {
 	return user, nil
 }
 
-func (s *userService) UpdateUser(req request.UpdateUserRequest) error {
-	return s.repo.Update(req)
+func (s *userService) UpdateUser(userID string, req request.UpdateUserRequest) error {
+	user, err := s.repo.GetByID(userID)
+	if err != nil {
+		return err
+	}
+
+	return s.repo.Update(user.ID, req)
 }
