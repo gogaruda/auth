@@ -17,3 +17,8 @@ Content-Type: application/json
     "email": "tamu-beserta-penulis@gmail.com",
     "role_ids": ["01JXYT9YZ4Y728VWB60BNCAYD8", "01JXYT9YZ4EGNGSRHSC6ZHN08Y"]
 }
+###
+
+### Delete data
+DELETE http://localhost:8080/api/users/01JY0TS5HBGPEQAJSBFETVVYKN
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAyNTQ4ODEsImlhdCI6MTc1MDE2ODQ4MSwicm9sZXMiOlsic3VwZXItYWRtaW4iXSwidG9rZW5fdmVyc2lvbiI6IjAxSlhaMlFCQjdQV0tGNjNYM0ZDTTBWQ0M0IiwidXNlcl9pZCI6IjAxSlhZVDlZWjRLUjYzRFEzOVo2OE4zN1JLIn0.2z_u1gk1tuc1AutosiWi3xokIGIOadxXWGwCV-0wj7o

@@ -10,6 +10,7 @@ type UserService interface {
 	GetAll() ([]response.UserResponse, error)
 	GetByID(userID string) (*response.UserResponse, error)
 	UpdateUser(userID string, req request.UpdateUserRequest) error
+	Delete(userID string) error
 }
 
 type userService struct {
@@ -45,4 +46,17 @@ func (s *userService) UpdateUser(userID string, req request.UpdateUserRequest) e
 	}
 
 	return s.repo.Update(user.ID, req)
+}
+
+func (s *userService) Delete(userID string) error {
+	user, err := s.repo.GetByID(userID)
+	if err != nil {
+		return err
+	}
+
+	if err := s.repo.Delete(user.ID); err != nil {
+		return err
+	}
+
+	return nil
 }

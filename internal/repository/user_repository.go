@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
 	"github.com/gogaruda/auth/internal/dto/request"
 	"github.com/gogaruda/auth/internal/dto/response"
 )
@@ -10,6 +11,7 @@ type UserRepository interface {
 	GetAll() ([]response.UserResponse, error)
 	GetByID(userID string) (*response.UserResponse, error)
 	Update(userID string, req request.UpdateUserRequest) error
+	Delete(userID string) error
 }
 
 type userRepository struct {
@@ -114,7 +116,7 @@ func (r *userRepository) GetByID(userID string) (*response.UserResponse, error) 
 	}
 
 	if user == nil {
-		return nil, sql.ErrNoRows
+		return nil, errors.New("User tidak ditemukan!")
 	}
 
 	return user, nil
@@ -154,6 +156,32 @@ func (r *userRepository) Update(userID string, req request.UpdateUserRequest) er
 		if _, err := stmt.Exec(userID, roleID); err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (r *userRepository) Delete(userID string) error {
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
+
+	_, err = tx.Exec(`DELETE FROM users WHERE id = ?`, userID)
+	if err != nil {
+		return errors.New("Gagal delete user")
+	}
+
+	_, err = tx.Exec(`DELETE FROM user_roles WHERE user_id = ?`, userID)
+	if err != nil {
+		return errors.New("Gagal delete user_roles")
 	}
 
 	return nil

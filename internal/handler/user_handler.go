@@ -59,3 +59,12 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 
 	c.JSON(http.StatusCreated, gin.H{"message": "Update berhasil!"})
 }
+
+func (h *UserHandler) DeleteUser(c *gin.Context) {
+	userID := c.Param("id")
+	if err := h.service.Delete(userID); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "Data berhasil dihapus"})
+}

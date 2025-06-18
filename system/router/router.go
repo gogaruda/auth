@@ -31,5 +31,6 @@ func InitRouter(r *gin.Engine, app *container.AppService) {
 		superAdmin.GET("/users", userHandler.GetAllUsers)
 		superAdmin.GET("/users/:id", userHandler.GetUserByID)
 		superAdmin.PUT("/users/:id", userHandler.UpdateUser)
+		superAdmin.DELETE("/users/:id", userHandler.DeleteUser)
 	}
 }
