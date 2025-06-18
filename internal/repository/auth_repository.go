@@ -2,9 +2,9 @@ package repository
 
 import (
 	"database/sql"
-	"sql/internal/dto/request"
-	"sql/internal/model"
-	"sql/pkg/utils"
+	"github.com/gogaruda/auth/internal/dto/request"
+	"github.com/gogaruda/auth/internal/model"
+	"github.com/gogaruda/auth/pkg/utils"
 )
 
 type AuthRepository interface {

@@ -2,9 +2,9 @@ package service
 
 import (
 	"errors"
-	"sql/internal/dto/request"
-	"sql/internal/repository"
-	"sql/pkg/utils"
+	"github.com/gogaruda/auth/internal/dto/request"
+	"github.com/gogaruda/auth/internal/repository"
+	"github.com/gogaruda/auth/pkg/utils"
 )
 
 type AuthService interface {

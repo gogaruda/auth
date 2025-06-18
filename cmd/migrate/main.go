@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/gogaruda/auth/internal/database"
 	"github.com/joho/godotenv"
 	"log"
-	"sql/internal/database"
 )
 
 func main() {

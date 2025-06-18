@@ -2,10 +2,10 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gogaruda/auth/internal/handler"
+	"github.com/gogaruda/auth/internal/middleware"
+	"github.com/gogaruda/auth/system/container"
 	"net/http"
-	"sql/internal/handler"
-	"sql/internal/middleware"
-	"sql/system/container"
 )
 
 func InitRouter(r *gin.Engine, app *container.AppService) {

@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"sql/system/container"
-	"sql/system/router"
+	"github.com/gogaruda/auth/system/container"
+	"github.com/gogaruda/auth/system/router"
 )
 
 func main() {

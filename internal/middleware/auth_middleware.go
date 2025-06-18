@@ -2,11 +2,11 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gogaruda/auth/internal/model"
+	"github.com/gogaruda/auth/system/config"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"os"
-	"sql/internal/model"
-	"sql/system/config"
 	"strings"
 	"time"
 )

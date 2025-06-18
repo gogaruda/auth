@@ -1,9 +1,9 @@
 package container
 
 import (
-	"sql/internal/repository"
-	"sql/internal/service"
-	config2 "sql/system/config"
+	"github.com/gogaruda/auth/internal/repository"
+	"github.com/gogaruda/auth/internal/service"
+	config2 "github.com/gogaruda/auth/system/config"
 )
 
 type AppService struct {

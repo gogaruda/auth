@@ -2,9 +2,9 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gogaruda/auth/internal/dto/request"
+	"github.com/gogaruda/auth/internal/service"
 	"net/http"
-	"sql/internal/dto/request"
-	"sql/internal/service"
 )
 
 type AuthHandler struct {

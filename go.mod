@@ -1,4 +1,4 @@
-module sql
+module github.com/gogaruda/auth
 
 go 1.24
 

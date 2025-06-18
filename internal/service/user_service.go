@@ -1,9 +1,9 @@
 package service
 
 import (
-	"sql/internal/dto/request"
-	"sql/internal/dto/response"
-	"sql/internal/repository"
+	"github.com/gogaruda/auth/internal/dto/request"
+	"github.com/gogaruda/auth/internal/dto/response"
+	"github.com/gogaruda/auth/internal/repository"
 )
 
 type UserService interface {

@@ -2,7 +2,7 @@ package seeder
 
 import (
 	"database/sql"
-	"sql/pkg/utils"
+	"github.com/gogaruda/auth/pkg/utils"
 )
 
 func User_roles(db *sql.DB) error {

@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/gogaruda/auth/internal/database/seeder"
+	"github.com/gogaruda/auth/system/config"
 	"github.com/joho/godotenv"
 	"log"
-	"sql/internal/database/seeder"
-	"sql/system/config"
 )
 
 func main() {
