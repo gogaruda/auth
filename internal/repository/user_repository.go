@@ -3,12 +3,16 @@ package repository
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"github.com/gogaruda/auth/internal/dto/request"
 	"github.com/gogaruda/auth/internal/dto/response"
+	"github.com/gogaruda/auth/pkg/utils"
 )
 
 type UserRepository interface {
+	IsRoleExists(roles []string) error
 	GetAll() ([]response.UserResponse, error)
+	Create(req request.CreateUserRequest) error
 	GetByID(userID string) (*response.UserResponse, error)
 	Update(userID string, req request.UpdateUserRequest) error
 	Delete(userID string) error
@@ -20,6 +24,22 @@ type userRepository struct {
 
 func NewUserRepository(db *sql.DB) UserRepository {
 	return &userRepository{db}
+}
+
+func (r *userRepository) IsRoleExists(roles []string) error {
+	for _, roleID := range roles {
+		var exists bool
+		err := r.db.QueryRow(`SELECT EXISTS(SELECT 1 FROM roles WHERE id = ?)`, roleID).Scan(&exists)
+		if err != nil {
+			return fmt.Errorf("gagal query role_id %v: %w", roleID, err)
+		}
+
+		if !exists {
+			return fmt.Errorf("role_id %v tidak ditemukan di database", roleID)
+		}
+	}
+
+	return nil
 }
 
 func (r *userRepository) GetAll() ([]response.UserResponse, error) {
@@ -68,6 +88,50 @@ func (r *userRepository) GetAll() ([]response.UserResponse, error) {
 	}
 
 	return users, nil
+}
+
+func (r *userRepository) Create(req request.CreateUserRequest) error {
+	newUserID := utils.NewULID()
+	hashedPassword, err := utils.GenerateHash(req.Password)
+	if err != nil {
+		return errors.New("gagal generate password")
+	}
+
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			tx.Rollback()
+		} else {
+			tx.Commit()
+		}
+	}()
+
+	_, err = tx.Exec(`INSERT INTO users(id, username, email, password) VALUES(?, ?, ?, ?)`,
+		newUserID,
+		req.Username,
+		req.Email,
+		hashedPassword,
+	)
+	if err != nil {
+		return errors.New("gagal tambah data users")
+	}
+
+	stmt, err := tx.Prepare(`INSERT INTO user_roles(user_id, role_id) VALUES(?, ?)`)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	for _, roleID := range req.RoleIDs {
+		if _, err := stmt.Exec(newUserID, roleID); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (r *userRepository) GetByID(userID string) (*response.UserResponse, error) {

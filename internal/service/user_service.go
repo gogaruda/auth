@@ -8,6 +8,7 @@ import (
 
 type UserService interface {
 	GetAll() ([]response.UserResponse, error)
+	Create(req request.CreateUserRequest) error
 	GetByID(userID string) (*response.UserResponse, error)
 	UpdateUser(userID string, req request.UpdateUserRequest) error
 	Delete(userID string) error
@@ -28,6 +29,18 @@ func (s *userService) GetAll() ([]response.UserResponse, error) {
 	}
 
 	return users, nil
+}
+
+func (s *userService) Create(req request.CreateUserRequest) error {
+	if err := s.repo.IsRoleExists(req.RoleIDs); err != nil {
+		return err
+	}
+
+	if err := s.repo.Create(req); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *userService) GetByID(userID string) (*response.UserResponse, error) {

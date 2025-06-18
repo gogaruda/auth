@@ -34,6 +34,21 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 	})
 }
 
+func (h *UserHandler) CreateUser(c *gin.Context) {
+	var req request.CreateUserRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if err := h.service.Create(req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{"message": "Tambah data baru berhasil"})
+}
+
 func (h *UserHandler) GetUserByID(c *gin.Context) {
 	userID := c.Param("id")
 	user, err := h.service.GetByID(userID)

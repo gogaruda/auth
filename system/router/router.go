@@ -29,6 +29,7 @@ func InitRouter(r *gin.Engine, app *container.AppService) {
 	superAdmin.Use(middleware.RoleMiddleware(middleware.MatchAny, "super-admin"))
 	{
 		superAdmin.GET("/users", userHandler.GetAllUsers)
+		superAdmin.POST("/users", userHandler.CreateUser)
 		superAdmin.GET("/users/:id", userHandler.GetUserByID)
 		superAdmin.PUT("/users/:id", userHandler.UpdateUser)
 		superAdmin.DELETE("/users/:id", userHandler.DeleteUser)
