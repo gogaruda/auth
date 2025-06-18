@@ -31,6 +31,7 @@ var defaultErrorMap = []HTTPErrorMap{
 	{CodeDBError, http.StatusInternalServerError, "Kesalahan database"},
 	{CodeInternalError, http.StatusInternalServerError, "Terjadi kesalahan internal"},
 	{CodeRoleNotFound, http.StatusBadRequest, "Role tidak ditemukan"},
+	{CodeAuthNotFound, http.StatusNotFound, "username/email atau password salah"},
 }
 
 func HandleHTTPError(c *gin.Context, err error) {

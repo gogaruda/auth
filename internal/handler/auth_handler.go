@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gogaruda/auth/internal/dto/request"
 	"github.com/gogaruda/auth/internal/service"
+	"github.com/gogaruda/auth/pkg/apperror"
 	"net/http"
 )
 
@@ -24,7 +25,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
 	token, err := h.service.Login(req)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		apperror.HandleHTTPError(c, err)
 		return
 	}
 
@@ -41,7 +42,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 	}
 
 	if err := h.service.Register(req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		apperror.HandleHTTPError(c, err)
 		return
 	}
 
@@ -56,7 +57,7 @@ func (h *AuthHandler) Logout(c *gin.Context) {
 	}
 
 	if err := h.service.Logout(userID.(string)); err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		apperror.HandleHTTPError(c, err)
 		return
 	}
 

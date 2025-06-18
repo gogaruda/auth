@@ -31,4 +31,5 @@ const (
 // Tambahan
 const (
 	CodeRoleNotFound = "ROLE_NOT_FOUND"
+	CodeAuthNotFound = "AUTH_NOTFOUND"
 )

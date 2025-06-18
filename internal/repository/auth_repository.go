@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"github.com/gogaruda/auth/internal/dto/request"
 	"github.com/gogaruda/auth/internal/model"
+	"github.com/gogaruda/auth/pkg/apperror"
 	"github.com/gogaruda/auth/pkg/utils"
 )
 
@@ -39,7 +40,10 @@ func (r *authRepository) IdentifierCheck(identifier string) (*model.UserModel, e
 		&user.TokenVersion,
 	)
 	if err != nil {
-		return nil, err
+		if err == sql.ErrNoRows {
+			return nil, apperror.New(apperror.CodeUserNotFound, "pengguna tidak ditemukan", nil)
+		}
+		return nil, apperror.New(apperror.CodeDBError, "gagal query IdentifierCheck", err)
 	}
 
 	rows, err := r.db.Query(`
@@ -50,7 +54,7 @@ func (r *authRepository) IdentifierCheck(identifier string) (*model.UserModel, e
 		user.ID,
 	)
 	if err != nil {
-		return nil, err
+		return nil, apperror.New(apperror.CodeDBError, "gagal query roles IdentifierCheck", err)
 	}
 	defer rows.Close()
 
@@ -58,11 +62,15 @@ func (r *authRepository) IdentifierCheck(identifier string) (*model.UserModel, e
 	for rows.Next() {
 		var role model.RoleModel
 		if err := rows.Scan(&role.ID, &role.Name); err != nil {
-			return nil, err
+			return nil, apperror.New(apperror.CodeDBError, "gagal scan roles IdentifierCheck", err)
 		}
 		roles = append(roles, role)
 	}
 	user.Roles = roles
+
+	if err := rows.Err(); err != nil {
+		return nil, apperror.New(apperror.CodeDBError, "error setelah iterasi rows IdentifierCheck", err)
+	}
 
 	return &user, nil
 }
@@ -71,9 +79,8 @@ func (r *authRepository) UpdateTokenVersion(userID string) (string, error) {
 	newVersion := utils.NewULID()
 	_, err := r.db.Exec("UPDATE users SET token_version = ? WHERE id = ?", newVersion, userID)
 	if err != nil {
-		return "", err
+		return "", apperror.New(apperror.CodeDBError, "gagal update token_version", err)
 	}
-
 	return newVersion, nil
 }
 
@@ -85,7 +92,7 @@ func (r *authRepository) IsUsernameExists(username string) (bool, error) {
 	if err == sql.ErrNoRows {
 		return false, nil
 	} else if err != nil {
-		return false, err
+		return false, apperror.New(apperror.CodeDBError, "gagal query username", err)
 	}
 
 	return true, nil
@@ -99,7 +106,7 @@ func (r *authRepository) IsEmailExists(email string) (bool, error) {
 	if err == sql.ErrNoRows {
 		return false, nil
 	} else if err != nil {
-		return false, err
+		return false, apperror.New(apperror.CodeDBError, "gagal query email", err)
 	}
 
 	return true, nil
@@ -109,52 +116,43 @@ func (r *authRepository) Create(req request.AuthRegisterRequest) error {
 	userID := utils.NewULID()
 	hashedPassword, err := utils.GenerateHash(req.Password)
 	if err != nil {
-		return err
+		return apperror.New(apperror.CodeInternalError, "gagal hash password", err)
 	}
 
 	tx, err := r.db.Begin()
 	if err != nil {
-		return err
+		return apperror.New(apperror.CodeDBError, "gagal mulai transaksi Create", err)
 	}
 	defer tx.Rollback()
 
-	// Insert user
 	_, err = tx.Exec(`
-			INSERT INTO 
-			users(id, username, email, password) 
-			VALUES (?, ?, ?, ?)
-			`,
-		userID,
-		req.Username,
-		req.Email,
-		hashedPassword,
+		INSERT INTO users(id, username, email, password)
+		VALUES (?, ?, ?, ?)`,
+		userID, req.Username, req.Email, hashedPassword,
 	)
 	if err != nil {
-		return err
+		return apperror.New(apperror.CodeDBConstraint, "gagal insert user", err)
 	}
 
-	// Ambil role_id
 	var roleID string
 	err = tx.QueryRow(`SELECT id FROM roles WHERE name = ?`, "tamu").Scan(&roleID)
 	if err == sql.ErrNoRows {
-		return err
+		return apperror.New(apperror.CodeRoleNotFound, "role tamu tidak ditemukan", nil)
+	} else if err != nil {
+		return apperror.New(apperror.CodeDBError, "gagal query role tamu", err)
 	}
 
-	// Insert relasi
 	_, err = tx.Exec(`
-			INSERT INTO
-			user_roles(user_id, role_id)
-			VALUES(?, ?)
-			`,
-		userID,
-		roleID,
+		INSERT INTO user_roles(user_id, role_id)
+		VALUES (?, ?)`,
+		userID, roleID,
 	)
 	if err != nil {
-		return err
+		return apperror.New(apperror.CodeDBError, "gagal insert user_roles", err)
 	}
 
-	if err = tx.Commit(); err != nil {
-		return err
+	if err := tx.Commit(); err != nil {
+		return apperror.New(apperror.CodeDBError, "gagal commit transaksi Create", err)
 	}
 
 	return nil

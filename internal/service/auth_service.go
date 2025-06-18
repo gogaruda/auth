@@ -1,9 +1,9 @@
 package service
 
 import (
-	"errors"
 	"github.com/gogaruda/auth/internal/dto/request"
 	"github.com/gogaruda/auth/internal/repository"
+	"github.com/gogaruda/auth/pkg/apperror"
 	"github.com/gogaruda/auth/pkg/utils"
 )
 
@@ -24,7 +24,7 @@ func NewAuthService(r repository.AuthRepository) AuthService {
 func (s *authService) Login(request request.AuthLoginRequest) (string, error) {
 	user, err := s.repo.IdentifierCheck(request.Identifier)
 	if err != nil || !utils.CompareHash(user.Password, request.Password) {
-		return "", errors.New("username/email atau password salah")
+		return "", apperror.New(apperror.CodeAuthNotFound, "username/email atau password salah", err)
 	}
 
 	var roleNames []string
@@ -45,19 +45,19 @@ func (s *authService) Register(req request.AuthRegisterRequest) error {
 	// Cek username
 	exists, err := s.repo.IsUsernameExists(req.Username)
 	if err != nil {
-		return errors.New("Kesalahan server")
+		return err
 	}
 	if exists {
-		return errors.New("Username sudah terdaftar")
+		return apperror.New(apperror.CodeUserConflict, "username sudah terdaftar", err)
 	}
 
 	// Cek email
 	existsEmail, errEmail := s.repo.IsEmailExists(req.Email)
 	if errEmail != nil {
-		return errors.New("Kesalahan server")
+		return err
 	}
 	if existsEmail {
-		return errors.New("Email sudah terdaftar")
+		return apperror.New(apperror.CodeUserConflict, "email sudah terdaftar", err)
 	}
 
 	// Create user
