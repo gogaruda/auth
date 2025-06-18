@@ -1,6 +1,8 @@
 package seeder
 
-import "sql/pkg/system/config"
+import (
+	"sql/system/config"
+)
 
 func SeedRun() error {
 	db := config.DB

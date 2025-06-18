@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 	"sql/internal/model"
-	"sql/pkg/system/config"
+	"sql/system/config"
 	"strings"
 	"time"
 )

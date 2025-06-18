@@ -5,7 +5,7 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"sql/internal/database/seeder"
-	"sql/pkg/system/config"
+	"sql/system/config"
 )
 
 func main() {

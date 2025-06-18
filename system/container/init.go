@@ -3,7 +3,7 @@ package container
 import (
 	"sql/internal/repository"
 	"sql/internal/service"
-	"sql/pkg/system/config"
+	config2 "sql/system/config"
 )
 
 type AppService struct {
@@ -12,9 +12,9 @@ type AppService struct {
 }
 
 func InitApp() *AppService {
-	config.LoadENV()
-	config.ConnectDB()
-	db := config.DB
+	config2.LoadENV()
+	config2.ConnectDB()
+	db := config2.DB
 
 	authRepository := repository.NewAuthRepository(db)
 	userRepository := repository.NewUserRepository(db)

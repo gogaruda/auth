@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"sql/internal/handler"
 	"sql/internal/middleware"
-	"sql/pkg/system/container"
+	"sql/system/container"
 )
 
 func InitRouter(r *gin.Engine, app *container.AppService) {
