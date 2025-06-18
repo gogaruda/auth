@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gogaruda/auth/internal/dto/request"
 	"github.com/gogaruda/auth/internal/service"
+	"github.com/gogaruda/auth/pkg/apperror"
 	"net/http"
 )
 
@@ -18,11 +19,7 @@ func NewUserHandler(s service.UserService) *UserHandler {
 func (h *UserHandler) GetAllUsers(c *gin.Context) {
 	users, err := h.service.GetAll()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":    http.StatusInternalServerError,
-			"status":  "error",
-			"message": "Gagal ambil data",
-		})
+		apperror.HandleHTTPError(c, err)
 		return
 	}
 
@@ -42,7 +39,7 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 	}
 
 	if err := h.service.Create(req); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		apperror.HandleHTTPError(c, err)
 		return
 	}
 
@@ -53,7 +50,7 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 	userID := c.Param("id")
 	user, err := h.service.GetByID(userID)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		apperror.HandleHTTPError(c, err)
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"data": user})
@@ -68,7 +65,7 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 	}
 
 	if err := h.service.UpdateUser(userID, req); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		apperror.HandleHTTPError(c, err)
 		return
 	}
 
@@ -78,7 +75,7 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 func (h *UserHandler) DeleteUser(c *gin.Context) {
 	userID := c.Param("id")
 	if err := h.service.Delete(userID); err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		apperror.HandleHTTPError(c, err)
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": "Data berhasil dihapus"})
