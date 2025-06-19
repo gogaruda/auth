@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/gogaruda/auth/internal/config"
-	"github.com/gogaruda/auth/internal/model"
+	"github.com/gogaruda/auth/auth/config"
+	"github.com/gogaruda/auth/auth/model"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"os"

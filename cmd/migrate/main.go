@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/gogaruda/auth/internal/database"
+	"github.com/gogaruda/auth/auth/database"
 	"github.com/joho/godotenv"
 	"log"
 )

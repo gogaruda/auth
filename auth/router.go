@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/gogaruda/auth/auth/handler"
+	"github.com/gogaruda/auth/auth/middleware"
 	"github.com/gogaruda/auth/auth/service"
-	"github.com/gogaruda/auth/internal/middleware"
 	"github.com/gogaruda/auth/pkg/validates"
 	"net/http"
 )

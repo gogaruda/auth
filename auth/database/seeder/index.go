@@ -1,7 +1,7 @@
 package seeder
 
 import (
-	"github.com/gogaruda/auth/internal/config"
+	"github.com/gogaruda/auth/auth/config"
 )
 
 func SeedRun() error {

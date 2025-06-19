@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gogaruda/auth/auth"
-	"github.com/gogaruda/auth/internal/config"
+	"github.com/gogaruda/auth/auth/config"
 	"os"
 )
 
