@@ -1,22 +1,18 @@
-### Coba roleMiddleware super admin
-GET http://localhost:8080/api/coba-super-admin
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAzNDE0MTEsImlhdCI6MTc1MDI1NTAxMSwicm9sZXMiOlsic3VwZXItYWRtaW4iXSwidG9rZW5fdmVyc2lvbiI6IjAxSlkxTjgxWjY0S0pCRUM3S0RUQUdLRkRKIiwidXNlcl9pZCI6IjAxSlhZVDlZWjRLUjYzRFEzOVo2OE4zN1JLIn0.FZmeoAa3dp3CByLyNkpIm8BnsaEINT-g686VCZr0x00
-
 ### Coba Auth
-GET http://localhost:8080/api/coba-auth
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAzNDE0MTEsImlhdCI6MTc1MDI1NTAxMSwicm9sZXMiOlsic3VwZXItYWRtaW4iXSwidG9rZW5fdmVyc2lvbiI6IjAxSlkxTjgxWjY0S0pCRUM3S0RUQUdLRkRKIiwidXNlcl9pZCI6IjAxSlhZVDlZWjRLUjYzRFEzOVo2OE4zN1JLIn0.FZmeoAa3dp3CByLyNkpIm8BnsaEINT-g686VCZr0x00
+GET http://localhost:8080/api/auth/coba-auth
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTA0MjE5MzIsImlhdCI6MTc1MDMzNTUzMiwicm9sZXMiOlsic3VwZXItYWRtaW4iXSwidG9rZW5fdmVyc2lvbiI6IjAxSlk0MjFCM0JYQUEyUERFSzlZUkRTRE1LIiwidXNlcl9pZCI6IjAxSlhZVDlZWjRLUjYzRFEzOVo2OE4zN1JLIn0.a1Xg_SNADCR4qOYDTY3flOMJZzkHGFaAK6Re_1yF4uw
 
 ### Login
-POST http://localhost:8080/api/login
+POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
     "identifier": "super-admin-1",
-    "password": ""
+    "password": "super-admin-1"
 }
 
 ### Registrasi
-POST http://localhost:8080/api/register
+POST http://localhost:8080/api/auth/register
 Content-Type: application/json
 
 {
@@ -26,5 +22,5 @@ Content-Type: application/json
 }
 
 ### Logout
-POST http://localhost:8080/api/logout
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTAzNDE0MTEsImlhdCI6MTc1MDI1NTAxMSwicm9sZXMiOlsic3VwZXItYWRtaW4iXSwidG9rZW5fdmVyc2lvbiI6IjAxSlkxTjgxWjY0S0pCRUM3S0RUQUdLRkRKIiwidXNlcl9pZCI6IjAxSlhZVDlZWjRLUjYzRFEzOVo2OE4zN1JLIn0.FZmeoAa3dp3CByLyNkpIm8BnsaEINT-g686VCZr0x00
+POST http://localhost:8080/api/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTA0MjE5MzIsImlhdCI6MTc1MDMzNTUzMiwicm9sZXMiOlsic3VwZXItYWRtaW4iXSwidG9rZW5fdmVyc2lvbiI6IjAxSlk0MjFCM0JYQUEyUERFSzlZUkRTRE1LIiwidXNlcl9pZCI6IjAxSlhZVDlZWjRLUjYzRFEzOVo2OE4zN1JLIn0.a1Xg_SNADCR4qOYDTY3flOMJZzkHGFaAK6Re_1yF4uw

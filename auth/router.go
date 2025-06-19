@@ -1,29 +1,28 @@
-package router
+package auth
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"github.com/gogaruda/auth/internal/handler"
+	"github.com/gogaruda/auth/auth/handler"
+	"github.com/gogaruda/auth/auth/service"
 	"github.com/gogaruda/auth/internal/middleware"
 	"github.com/gogaruda/auth/pkg/validates"
-	"github.com/gogaruda/auth/system/container"
 	"net/http"
 )
 
-func InitRouter(r *gin.Engine, app *container.AppService) {
-	r.Use(middleware.CORSMiddleware())
+func RegisterAuthRoutes(rg *gin.RouterGroup, authService service.AuthService, userService service.UserService) {
+	rg.Use(middleware.CORSMiddleware())
 
 	v := validator.New()
 	valid := validates.NewValidates(v)
 
-	authHandler := handler.NewAuthHandler(app.AuthService, valid)
-	userHandler := handler.NewUserHandler(app.UserService, valid)
+	authHandler := handler.NewAuthHandler(authService, valid)
+	userHandler := handler.NewUserHandler(userService, valid)
 
-	api := r.Group("/api")
-	api.POST("/login", authHandler.Login)
-	api.POST("/register", authHandler.Register)
+	rg.POST("/login", authHandler.Login)
+	rg.POST("/register", authHandler.Register)
 
-	auth := api.Group("/")
+	auth := rg.Group("/")
 	auth.Use(middleware.AuthMiddleware())
 	auth.POST("/logout", authHandler.Logout)
 	auth.GET("/coba-auth", func(c *gin.Context) {

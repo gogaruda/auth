@@ -3,9 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/gogaruda/auth/system/config"
-	"github.com/gogaruda/auth/system/container"
-	"github.com/gogaruda/auth/system/router"
+	"github.com/gogaruda/auth/auth"
+	"github.com/gogaruda/auth/internal/config"
 	"os"
 )
 
@@ -15,10 +14,12 @@ func main() {
 		gin.SetMode(gin.ReleaseMode)
 	}
 
-	r := gin.Default()
+	db := config.ConnectDB()
+	app := auth.InitAuthModule(db)
 
-	app := container.InitApp()
-	router.InitRouter(r, app)
+	r := gin.Default()
+	api := r.Group("/api")
+	auth.RegisterAuthRoutes(api.Group("/auth"), app.AuthService, app.UserService)
 
 	port := os.Getenv("APP_PORT")
 	fmt.Println(port)
@@ -26,5 +27,5 @@ func main() {
 		port = "8080"
 	}
 
-	r.Run(":" + port)
+	_ = r.Run(":" + port)
 }

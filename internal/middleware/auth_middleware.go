@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gogaruda/auth/internal/config"
 	"github.com/gogaruda/auth/internal/model"
-	"github.com/gogaruda/auth/system/config"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
 	"os"
@@ -68,7 +68,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		}
 
 		var user model.UserModel
-		db := config.DB
+		db := config.ConnectDB()
 		if err := db.QueryRow("SELECT token_version FROM users WHERE id = ?", userID).Scan(&user.TokenVersion); err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User tidak ditemukan!"})
 			return

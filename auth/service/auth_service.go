@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/gogaruda/auth/internal/dto/request"
-	"github.com/gogaruda/auth/internal/repository"
+	"github.com/gogaruda/auth/auth/dto/request"
+	"github.com/gogaruda/auth/auth/repository"
 	"github.com/gogaruda/auth/pkg/apperror"
 	"github.com/gogaruda/auth/pkg/utils"
 )

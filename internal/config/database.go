@@ -7,9 +7,7 @@ import (
 	"os"
 )
 
-var DB *sql.DB
-
-func ConnectDB() {
+func ConnectDB() *sql.DB {
 	dsn := fmt.Sprintf("%v:%v@tcp(%v:%v)/%v",
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASS"),
@@ -27,6 +25,6 @@ func ConnectDB() {
 		panic(err)
 	}
 
-	DB = db
 	fmt.Println("Koneksi berhasil")
+	return db
 }

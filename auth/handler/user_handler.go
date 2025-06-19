@@ -2,8 +2,8 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/gogaruda/auth/internal/dto/request"
-	"github.com/gogaruda/auth/internal/service"
+	"github.com/gogaruda/auth/auth/dto/request"
+	"github.com/gogaruda/auth/auth/service"
 	"github.com/gogaruda/auth/pkg/apperror"
 	"github.com/gogaruda/auth/pkg/response"
 	"github.com/gogaruda/auth/pkg/validates"

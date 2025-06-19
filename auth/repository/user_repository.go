@@ -3,9 +3,9 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	"github.com/gogaruda/auth/auth/dto/request"
+	"github.com/gogaruda/auth/auth/dto/response"
 
-	"github.com/gogaruda/auth/internal/dto/request"
-	"github.com/gogaruda/auth/internal/dto/response"
 	"github.com/gogaruda/auth/pkg/apperror"
 	"github.com/gogaruda/auth/pkg/helper"
 	"github.com/gogaruda/auth/pkg/utils"

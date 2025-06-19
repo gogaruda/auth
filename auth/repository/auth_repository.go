@@ -2,7 +2,7 @@ package repository
 
 import (
 	"database/sql"
-	"github.com/gogaruda/auth/internal/dto/request"
+	"github.com/gogaruda/auth/auth/dto/request"
 	"github.com/gogaruda/auth/internal/model"
 	"github.com/gogaruda/auth/pkg/apperror"
 	"github.com/gogaruda/auth/pkg/utils"
