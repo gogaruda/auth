@@ -1,3 +1,13 @@
+# README.md
+## Install
+```go
+go get github.com/gogaruda/auth@v1.0.0
+```
+## Penggunaan
+```go
+
+```
+
 ### Buat File Migrasi
 ```go
 migrate create -ext sql -dir internal/database/migrations -seq create_users_table

@@ -12,7 +12,6 @@ type AppService struct {
 }
 
 func InitApp() *AppService {
-	config.LoadENV()
 	config.ConnectDB()
 	db := config.DB
 
