@@ -1,5 +1,5 @@
 ### Ambil semua data
-GET http://localhost:8080/api/auth/users
+GET http://localhost:8080/api/auth/users?page=3
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTA0MjE5MzIsImlhdCI6MTc1MDMzNTUzMiwicm9sZXMiOlsic3VwZXItYWRtaW4iXSwidG9rZW5fdmVyc2lvbiI6IjAxSlk0MjFCM0JYQUEyUERFSzlZUkRTRE1LIiwidXNlcl9pZCI6IjAxSlhZVDlZWjRLUjYzRFEzOVo2OE4zN1JLIn0.a1Xg_SNADCR4qOYDTY3flOMJZzkHGFaAK6Re_1yF4uw
 
 ### Create

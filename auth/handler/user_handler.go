@@ -7,6 +7,7 @@ import (
 	"github.com/gogaruda/auth/pkg/apperror"
 	"github.com/gogaruda/auth/pkg/response"
 	"github.com/gogaruda/auth/pkg/validates"
+	"strconv"
 )
 
 type UserHandler struct {
@@ -19,13 +20,23 @@ func NewUserHandler(s service.UserService, v *validates.Validates) *UserHandler 
 }
 
 func (h *UserHandler) GetAllUsers(c *gin.Context) {
-	users, err := h.service.GetAll()
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
+	offset := (page - 1) * limit
+
+	users, total, err := h.service.GetAll(limit, offset)
 	if err != nil {
 		apperror.HandleHTTPError(c, err)
 		return
 	}
 
-	response.OK(c, users, "query ok", nil)
+	meta := response.MetaData{
+		Page:  page,
+		Limit: limit,
+		Total: total,
+	}
+
+	response.OK(c, users, "query ok", &meta)
 }
 
 func (h *UserHandler) CreateUser(c *gin.Context) {

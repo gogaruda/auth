@@ -13,7 +13,7 @@ import (
 
 type UserRepository interface {
 	IsRoleExists(roles []string) error
-	GetAll() ([]response.UserResponse, error)
+	GetAll(limit, offset int) ([]response.UserResponse, int, error)
 	Create(req request.CreateUserRequest) error
 	GetByID(userID string) (*response.UserResponse, error)
 	Update(userID string, req request.UpdateUserRequest) error
@@ -42,17 +42,35 @@ func (r *userRepository) IsRoleExists(roles []string) error {
 	return nil
 }
 
-func (r *userRepository) GetAll() ([]response.UserResponse, error) {
+func (r *userRepository) GetAll(limit, offset int) ([]response.UserResponse, int, error) {
+	// Query untuk ambil data user dan role
 	query := `SELECT u.id, u.username, u.email, r.id AS role_id, r.name AS role
-					FROM user_roles ur
-					INNER JOIN users u ON ur.user_id = u.id
-					INNER JOIN roles r ON ur.role_id = r.id
-					WHERE r.name != ?
-					ORDER BY u.updated_at DESC`
+			  FROM user_roles ur
+			  INNER JOIN users u ON ur.user_id = u.id
+			  INNER JOIN roles r ON ur.role_id = r.id
+			  WHERE r.name != ?
+			  ORDER BY u.updated_at DESC
+				LIMIT ?
+				OFFSET ?`
 
-	rows, err := r.db.Query(query, "super-admin")
+	// Query untuk total count user (distinct agar tidak duplikat per role)
+	countQuery := `SELECT COUNT(DISTINCT u.id)
+				   FROM user_roles ur
+				   INNER JOIN users u ON ur.user_id = u.id
+				   INNER JOIN roles r ON ur.role_id = r.id
+				   WHERE r.name != ?`
+
+	// Eksekusi count query
+	var total int
+	err := r.db.QueryRow(countQuery, "super-admin").Scan(&total)
 	if err != nil {
-		return nil, apperror.New(apperror.CodeDBError, "gagal query GetAll", err)
+		return nil, 0, apperror.New(apperror.CodeDBError, "gagal hitung total user", err)
+	}
+
+	// Eksekusi query data
+	rows, err := r.db.Query(query, "super-admin", limit, offset)
+	if err != nil {
+		return nil, 0, apperror.New(apperror.CodeDBError, "gagal query GetAll", err)
 	}
 	defer rows.Close()
 
@@ -61,7 +79,7 @@ func (r *userRepository) GetAll() ([]response.UserResponse, error) {
 	for rows.Next() {
 		var userID, username, email, roleID, roleName string
 		if err := rows.Scan(&userID, &username, &email, &roleID, &roleName); err != nil {
-			return nil, apperror.New(apperror.CodeDBError, "gagal scan GetAll", err)
+			return nil, 0, apperror.New(apperror.CodeDBError, "gagal scan GetAll", err)
 		}
 		if _, exists := userMap[userID]; !exists {
 			userMap[userID] = &response.UserResponse{
@@ -75,14 +93,15 @@ func (r *userRepository) GetAll() ([]response.UserResponse, error) {
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, apperror.New(apperror.CodeDBError, "error setelah iterasi rows", err)
+		return nil, 0, apperror.New(apperror.CodeDBError, "error setelah iterasi rows", err)
 	}
 
 	var users []response.UserResponse
 	for _, user := range userMap {
 		users = append(users, *user)
 	}
-	return users, nil
+
+	return users, total, nil
 }
 
 func (r *userRepository) Create(req request.CreateUserRequest) error {

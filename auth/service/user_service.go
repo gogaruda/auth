@@ -7,7 +7,7 @@ import (
 )
 
 type UserService interface {
-	GetAll() ([]response.UserResponse, error)
+	GetAll(limit, offset int) ([]response.UserResponse, int, error)
 	Create(req request.CreateUserRequest) error
 	GetByID(userID string) (*response.UserResponse, error)
 	UpdateUser(userID string, req request.UpdateUserRequest) error
@@ -22,13 +22,13 @@ func NewUserService(r repository.UserRepository) UserService {
 	return &userService{repo: r}
 }
 
-func (s *userService) GetAll() ([]response.UserResponse, error) {
-	users, err := s.repo.GetAll()
+func (s *userService) GetAll(limit, offset int) ([]response.UserResponse, int, error) {
+	users, total, err := s.repo.GetAll(limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, total, err
 	}
 
-	return users, nil
+	return users, total, nil
 }
 
 func (s *userService) Create(req request.CreateUserRequest) error {
