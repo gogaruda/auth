@@ -19,7 +19,7 @@ func RunMigration() error {
 	)
 
 	m, err := migrate.New(
-		"file://internal/database/migrations",
+		"file://auth/database/migrations",
 		dsn,
 	)
 	if err != nil {

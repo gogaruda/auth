@@ -1,5 +1,9 @@
 # CHANGELOG.md
 
+## 1.1.1 (2025-06-19)
+Fix:
+ - Migration fixed
+
 ## 1.1.0 (2025-06-19)
 fix:
  - Pindahkan semua isi di folder internal ke folder auth
