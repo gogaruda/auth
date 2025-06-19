@@ -1,5 +1,9 @@
 # CHANGELOG.md
 
+## 1.0.1 (2025-06-19)
+Fix:
+ - Struktur folder jadi lebih modular
+
 ## 1.0.0 (2025-06-19) - Init Release
 
 Features:
