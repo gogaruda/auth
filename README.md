@@ -1,7 +1,7 @@
 # README.md
 ## Install
 ```
-go get github.com/gogaruda/auth@v1.2.0
+go get github.com/gogaruda/auth@v1.2.1
 ```
 ## Penggunaan
 ```go
