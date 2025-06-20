@@ -5,7 +5,7 @@ import (
 	"github.com/gogaruda/auth/pkg/utils"
 )
 
-func User_roles(db *sql.DB) error {
+func UserRoles(db *sql.DB) error {
 	passwordHash, err := utils.GenerateHash("super-admin-1")
 	if err != nil {
 		return err

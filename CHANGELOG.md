@@ -1,20 +1,23 @@
 # CHANGELOG.md
 
+## 1.2.0 (2025-06-20)
+### Fixed:
+- Fixed migration and seeder execution issues
+
 ## 1.1.1 (2025-06-19)
-Fix:
+### Fixed:
  - Migration fixed
 
 ## 1.1.0 (2025-06-19)
-fix:
+### Fixed:
  - Pindahkan semua isi di folder internal ke folder auth
 
 ## 1.0.1 (2025-06-19)
-Fix:
+### Fixed:
  - Struktur folder jadi lebih modular
 
 ## 1.0.0 (2025-06-19) - Init Release
-
-Features:
+### Features:
  - Add Pagination
  - Add LoadENV
  - Add Config Database

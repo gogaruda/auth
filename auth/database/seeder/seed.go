@@ -7,7 +7,7 @@ import (
 func SeedRun() error {
 	db := config.ConnectDB()
 
-	if err := User_roles(db); err != nil {
+	if err := UserRoles(db); err != nil {
 		return err
 	}
 
