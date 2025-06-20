@@ -1,12 +1,16 @@
 # CHANGELOG.md
 
+## 1.3.0 (2025-06-20)
+### Features:
+ - Added Swagger Docs
+
 ## 1.2.1 (2025-06-20)
 ### Fixed:
-- Fixed migration and seeder execution issues
+ - Fixed migration and seeder execution issues
 
 ## 1.2.0 (2025-06-20)
 ### Fixed:
-- Fixed migration and seeder execution issues
+ - Fixed migration and seeder execution issues
 
 ## 1.1.1 (2025-06-19)
 ### Fixed:

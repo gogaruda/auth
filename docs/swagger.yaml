@@ -1,0 +1,340 @@
+basePath: /
+definitions:
+  apperror.InitError:
+    properties:
+      code:
+        type: string
+      err: {}
+      message:
+        type: string
+    type: object
+  request.AuthLoginRequest:
+    properties:
+      identifier:
+        type: string
+      password:
+        type: string
+    required:
+    - identifier
+    - password
+    type: object
+  request.AuthRegisterRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+  request.CreateUserRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+      role_ids:
+        items:
+          type: string
+        type: array
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - role_ids
+    - username
+    type: object
+  request.UpdateUserRequest:
+    properties:
+      email:
+        type: string
+      role_ids:
+        items:
+          type: string
+        type: array
+      username:
+        type: string
+    required:
+    - email
+    - role_ids
+    - username
+    type: object
+  response.APIResponse:
+    properties:
+      code:
+        type: integer
+      data: {}
+      errors: {}
+      message:
+        type: string
+      meta:
+        $ref: '#/definitions/response.MetaData'
+      status:
+        $ref: '#/definitions/response.Status'
+    type: object
+  response.MetaData:
+    properties:
+      limit:
+        type: integer
+      page:
+        type: integer
+      total:
+        type: integer
+    type: object
+  response.Status:
+    enum:
+    - success
+    - error
+    type: string
+    x-enum-varnames:
+    - StatusSuccess
+    - StatusError
+host: localhost:8080
+info:
+  contact: {}
+  description: Auth system
+  title: Auth - REST API Docs
+  version: "1.0"
+paths:
+  /api/auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Login data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.AuthLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+      summary: Login
+      tags:
+      - Auth
+  /api/auth/logout:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+      security:
+      - BearerAuth: []
+      summary: Logout current user
+      tags:
+      - Auth
+  /api/auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Register data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.AuthRegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+      summary: Register new user
+      tags:
+      - Auth
+  /api/auth/users:
+    get:
+      parameters:
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - default: 10
+        description: Items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+      security:
+      - BearerAuth: []
+      summary: Get all users with pagination
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: User data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+      security:
+      - BearerAuth: []
+      summary: Create a new user
+      tags:
+      - Users
+  /api/auth/users/{id}:
+    delete:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+      security:
+      - BearerAuth: []
+      summary: Delete user by ID
+      tags:
+      - Users
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+      security:
+      - BearerAuth: []
+      summary: Get user by ID
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated user data
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/apperror.InitError'
+      security:
+      - BearerAuth: []
+      summary: Update user by ID
+      tags:
+      - Users
+schemes:
+- http
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

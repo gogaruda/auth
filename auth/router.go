@@ -11,8 +11,6 @@ import (
 )
 
 func RegisterAuthRoutes(rg *gin.RouterGroup, authService service.AuthService, userService service.UserService) {
-	rg.Use(middleware.CORSMiddleware())
-
 	v := validator.New()
 	valid := validates.NewValidates(v)
 
