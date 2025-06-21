@@ -7,7 +7,6 @@ import (
 	"github.com/gogaruda/auth/auth/middleware"
 	"github.com/gogaruda/auth/auth/service"
 	"github.com/gogaruda/auth/pkg/validates"
-	"net/http"
 )
 
 func RegisterAuthRoutes(rg *gin.RouterGroup, authService service.AuthService, userService service.UserService) {
@@ -22,18 +21,17 @@ func RegisterAuthRoutes(rg *gin.RouterGroup, authService service.AuthService, us
 
 	auth := rg.Group("/")
 	auth.Use(middleware.AuthMiddleware())
-	auth.POST("/logout", authHandler.Logout)
-	auth.GET("/coba-auth", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "Yee, Anda berhasil login!"})
-	})
-
-	superAdmin := auth.Group("/")
-	superAdmin.Use(middleware.RoleMiddleware(middleware.MatchAny, "super-admin"))
 	{
-		superAdmin.GET("/users", userHandler.GetAllUsers)
-		superAdmin.POST("/users", userHandler.CreateUser)
-		superAdmin.GET("/users/:id", userHandler.GetUserByID)
-		superAdmin.PUT("/users/:id", userHandler.UpdateUser)
-		superAdmin.DELETE("/users/:id", userHandler.DeleteUser)
+		auth.POST("/logout", authHandler.Logout)
+
+		superAdmin := auth.Group("/")
+		superAdmin.Use(middleware.RoleMiddleware(middleware.MatchAny, "super-admin"))
+		{
+			superAdmin.GET("/users", userHandler.GetAllUsers)
+			superAdmin.POST("/users", userHandler.CreateUser)
+			superAdmin.GET("/users/:id", userHandler.GetUserByID)
+			superAdmin.PUT("/users/:id", userHandler.UpdateUser)
+			superAdmin.DELETE("/users/:id", userHandler.DeleteUser)
+		}
 	}
 }

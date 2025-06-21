@@ -1,6 +1,10 @@
 # CHANGELOG.md
 
-## 1.3.2(2025-06-21)
+## 1.3.3 (2025-06-21)
+### Fixed:
+ - Fixed route auth middleware issue
+
+## 1.3.2 (2025-06-21)
 ### Fixed:
  - Fixed schema_migrations to auth_migrations (Memisahkan versi migrasi antar repository)
 
