@@ -1,7 +1,7 @@
 # README.md
 ## Install
 ```
-go get github.com/gogaruda/auth@v1.3.1
+go get github.com/gogaruda/auth@v1.3.2
 ```
 ## Penggunaan
 ```go
@@ -140,19 +140,19 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/gogaruda/auth/auth"
+	authModule "github.com/gogaruda/auth/auth"
 	"github.com/gogaruda/auth/auth/config"
 	"github.com/gogaruda/auth/auth/middleware"
 	_ "github.com/gogaruda/auth/docs"
-	"github.com/gogaruda/auth/swagger"
+	authSwagger "github.com/gogaruda/auth/swagger"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"os"
 )
 
 // Swagger documentation
-// @title Auth - REST API Docs
-// @description Auth system
+// @title Blog - REST API Docs
+// @description Blog system
 // @version 1.0
 // @host localhost:8080
 // @BasePath /
@@ -168,7 +168,7 @@ func main() {
 	}
 
 	db := config.ConnectDB()
-	app := auth.InitAuthModule(db)
+	app := authModule.InitAuthModule(db)
 
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())
@@ -176,8 +176,8 @@ func main() {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	api := r.Group("/api")
-	swagger.RegisterSwaggerRoutes(api.Group("/auth"))
-	auth.RegisterAuthRoutes(api.Group("/auth"), app.AuthService, app.UserService)
+	authSwagger.RegisterSwaggerRoutes(api.Group("/auth"))
+	authModule.RegisterAuthRoutes(api.Group("/auth"), app.AuthService, app.UserService)
 
 	port := os.Getenv("APP_PORT")
 	fmt.Println(port)
@@ -187,5 +187,4 @@ func main() {
 
 	_ = r.Run(":" + port)
 }
-
 ```

@@ -1,5 +1,9 @@
 # CHANGELOG.md
 
+## 1.3.2(2025-06-21)
+### Fixed:
+ - Fixed schema_migrations to auth_migrations (Memisahkan versi migrasi antar repository)
+
 ## 1.3.1 (2025-06-21)
 ### Fixed:
  - Fixed Collate Table To utf8mb4_unicode_ci

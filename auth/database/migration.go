@@ -24,7 +24,7 @@ func RunMigration() error {
 		return err
 	}
 
-	driver, err := mysql.WithInstance(db, &mysql.Config{})
+	driver, err := mysql.WithInstance(db, &mysql.Config{MigrationsTable: "auth_migrations"})
 	if err != nil {
 		return err
 	}
