@@ -19,16 +19,6 @@ func NewAuthHandler(h service.AuthService, v *validates.Validates) *AuthHandler 
 	return &AuthHandler{service: h, Validator: v}
 }
 
-// Login godoc
-// @Summary Login
-// @Tags Auth
-// @Accept json
-// @Produce json
-// @Param data body request.AuthLoginRequest true "Login data"
-// @Success 200 {object} response.AuthSwaggerResponse
-// @Failure 400 {object} response.AuthSwaggerResponse
-// @Failure 401 {object} response.AuthSwaggerResponse
-// @Router /api/auth/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req request.AuthLoginRequest
 	if !h.Validator.ValidateJSON(c, &req) {
@@ -44,16 +34,6 @@ func (h *AuthHandler) Login(c *gin.Context) {
 	response.OK(c, nil, token, nil)
 }
 
-// Register godoc
-// @Summary Register new user
-// @Tags Auth
-// @Accept json
-// @Produce json
-// @Param data body request.AuthRegisterRequest true "Register data"
-// @Success 201 {object} response.AuthSwaggerResponse
-// @Failure 400 {object} response.AuthSwaggerResponse
-// @Failure 409 {object} response.AuthSwaggerResponse
-// @Router /api/auth/register [post]
 func (h *AuthHandler) Register(c *gin.Context) {
 	var req request.AuthRegisterRequest
 	if !h.Validator.ValidateJSON(c, &req) {
@@ -68,14 +48,6 @@ func (h *AuthHandler) Register(c *gin.Context) {
 	response.Created(c, nil, "query ok")
 }
 
-// Logout godoc
-// @Summary Logout current user
-// @Tags Auth
-// @Security BearerAuth
-// @Produce json
-// @Success 200 {object} response.AuthSwaggerResponse
-// @Failure 401 {object} response.AuthSwaggerResponse
-// @Router /api/auth/logout [post]
 func (h *AuthHandler) Logout(c *gin.Context) {
 	userID, exists := c.Get("user_id")
 	if !exists {

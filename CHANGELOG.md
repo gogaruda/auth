@@ -1,6 +1,10 @@
 # CHANGELOG.md
 
-## 1.3.4 (2025-05-21)
+## 1.3.5 (2025-06-21)
+### Fixed:
+ - Hapus swaggo
+
+## 1.3.4 (2025-06-21)
 ### Fixed:
  - Pindahkan semua pkg ke repo terpisah
 
