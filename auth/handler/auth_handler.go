@@ -4,9 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gogaruda/auth/auth/dto/request"
 	"github.com/gogaruda/auth/auth/service"
-	"github.com/gogaruda/auth/pkg/apperror"
-	"github.com/gogaruda/auth/pkg/response"
-	"github.com/gogaruda/auth/pkg/validates"
+	"github.com/gogaruda/pkg/apperror"
+	"github.com/gogaruda/pkg/response"
+	"github.com/gogaruda/pkg/validates"
 	"net/http"
 )
 
@@ -25,9 +25,9 @@ func NewAuthHandler(h service.AuthService, v *validates.Validates) *AuthHandler 
 // @Accept json
 // @Produce json
 // @Param data body request.AuthLoginRequest true "Login data"
-// @Success 200 {object} response.APIResponse
-// @Failure 400 {object} apperror.InitError
-// @Failure 401 {object} apperror.InitError
+// @Success 200 {object} response.AuthSwaggerResponse
+// @Failure 400 {object} response.AuthSwaggerResponse
+// @Failure 401 {object} response.AuthSwaggerResponse
 // @Router /api/auth/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req request.AuthLoginRequest
@@ -50,9 +50,9 @@ func (h *AuthHandler) Login(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param data body request.AuthRegisterRequest true "Register data"
-// @Success 201 {object} response.APIResponse
-// @Failure 400 {object} apperror.InitError
-// @Failure 409 {object} apperror.InitError
+// @Success 201 {object} response.AuthSwaggerResponse
+// @Failure 400 {object} response.AuthSwaggerResponse
+// @Failure 409 {object} response.AuthSwaggerResponse
 // @Router /api/auth/register [post]
 func (h *AuthHandler) Register(c *gin.Context) {
 	var req request.AuthRegisterRequest
@@ -73,8 +73,8 @@ func (h *AuthHandler) Register(c *gin.Context) {
 // @Tags Auth
 // @Security BearerAuth
 // @Produce json
-// @Success 200 {object} response.APIResponse
-// @Failure 401 {object} apperror.InitError
+// @Success 200 {object} response.AuthSwaggerResponse
+// @Failure 401 {object} response.AuthSwaggerResponse
 // @Router /api/auth/logout [post]
 func (h *AuthHandler) Logout(c *gin.Context) {
 	userID, exists := c.Get("user_id")

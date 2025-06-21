@@ -1,13 +1,5 @@
 basePath: /
 definitions:
-  apperror.InitError:
-    properties:
-      code:
-        type: string
-      err: {}
-      message:
-        type: string
-    type: object
   request.AuthLoginRequest:
     properties:
       identifier:
@@ -66,36 +58,46 @@ definitions:
     - role_ids
     - username
     type: object
-  response.APIResponse:
+  response.AuthSwaggerResponse:
     properties:
       code:
         type: integer
-      data: {}
-      errors: {}
+      data:
+        type: string
       message:
         type: string
-      meta:
-        $ref: '#/definitions/response.MetaData'
-      status:
-        $ref: '#/definitions/response.Status'
     type: object
-  response.MetaData:
+  response.RoleResponse:
     properties:
-      limit:
-        type: integer
-      page:
-        type: integer
-      total:
-        type: integer
+      id:
+        type: string
+      name:
+        type: string
     type: object
-  response.Status:
-    enum:
-    - success
-    - error
-    type: string
-    x-enum-varnames:
-    - StatusSuccess
-    - StatusError
+  response.UserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      roles:
+        items:
+          $ref: '#/definitions/response.RoleResponse'
+        type: array
+      username:
+        type: string
+    type: object
+  response.UserSwaggerResponse:
+    properties:
+      code:
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/response.UserResponse'
+        type: array
+      message:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -120,15 +122,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.APIResponse'
+            $ref: '#/definitions/response.AuthSwaggerResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.AuthSwaggerResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.AuthSwaggerResponse'
       summary: Login
       tags:
       - Auth
@@ -140,11 +142,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.APIResponse'
+            $ref: '#/definitions/response.AuthSwaggerResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.AuthSwaggerResponse'
       security:
       - BearerAuth: []
       summary: Logout current user
@@ -167,15 +169,15 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/response.APIResponse'
+            $ref: '#/definitions/response.AuthSwaggerResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.AuthSwaggerResponse'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.AuthSwaggerResponse'
       summary: Register new user
       tags:
       - Auth
@@ -198,11 +200,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.APIResponse'
+            $ref: '#/definitions/response.UserSwaggerResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.UserSwaggerResponse'
       security:
       - BearerAuth: []
       summary: Get all users with pagination
@@ -224,15 +226,15 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/response.APIResponse'
+            $ref: '#/definitions/response.UserSwaggerResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.UserSwaggerResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.UserSwaggerResponse'
       security:
       - BearerAuth: []
       summary: Create a new user
@@ -254,11 +256,11 @@ paths:
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.UserSwaggerResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.UserSwaggerResponse'
       security:
       - BearerAuth: []
       summary: Delete user by ID
@@ -277,15 +279,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/response.APIResponse'
+            $ref: '#/definitions/response.UserSwaggerResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.UserSwaggerResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.UserSwaggerResponse'
       security:
       - BearerAuth: []
       summary: Get user by ID
@@ -312,19 +314,19 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/response.APIResponse'
+            $ref: '#/definitions/response.UserSwaggerResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.UserSwaggerResponse'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.UserSwaggerResponse'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/apperror.InitError'
+            $ref: '#/definitions/response.UserSwaggerResponse'
       security:
       - BearerAuth: []
       summary: Update user by ID

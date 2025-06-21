@@ -3,8 +3,8 @@ package service
 import (
 	"github.com/gogaruda/auth/auth/dto/request"
 	"github.com/gogaruda/auth/auth/repository"
-	"github.com/gogaruda/auth/pkg/apperror"
-	"github.com/gogaruda/auth/pkg/utils"
+	"github.com/gogaruda/pkg/apperror"
+	"github.com/gogaruda/pkg/utils"
 )
 
 type AuthService interface {

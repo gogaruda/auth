@@ -4,8 +4,8 @@ import (
 	"database/sql"
 	"github.com/gogaruda/auth/auth/dto/request"
 	"github.com/gogaruda/auth/auth/model"
-	"github.com/gogaruda/auth/pkg/apperror"
-	"github.com/gogaruda/auth/pkg/utils"
+	"github.com/gogaruda/pkg/apperror"
+	"github.com/gogaruda/pkg/utils"
 )
 
 type AuthRepository interface {

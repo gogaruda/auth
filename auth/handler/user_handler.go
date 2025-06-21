@@ -4,9 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gogaruda/auth/auth/dto/request"
 	"github.com/gogaruda/auth/auth/service"
-	"github.com/gogaruda/auth/pkg/apperror"
-	"github.com/gogaruda/auth/pkg/response"
-	"github.com/gogaruda/auth/pkg/validates"
+	"github.com/gogaruda/pkg/apperror"
+	"github.com/gogaruda/pkg/response"
+	"github.com/gogaruda/pkg/validates"
 	"strconv"
 )
 
@@ -26,8 +26,8 @@ func NewUserHandler(s service.UserService, v *validates.Validates) *UserHandler 
 // @Produce json
 // @Param page query int false "Page number" default(1)
 // @Param limit query int false "Items per page" default(10)
-// @Success 200 {object} response.APIResponse
-// @Failure 401 {object} apperror.InitError
+// @Success 200 {object} response.UserSwaggerResponse
+// @Failure 401 {object} response.UserSwaggerResponse
 // @Router /api/auth/users [get]
 func (h *UserHandler) GetAllUsers(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
@@ -56,9 +56,9 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param data body request.CreateUserRequest true "User data"
-// @Success 201 {object} response.APIResponse
-// @Failure 400 {object} apperror.InitError
-// @Failure 401 {object} apperror.InitError
+// @Success 201 {object} response.UserSwaggerResponse
+// @Failure 400 {object} response.UserSwaggerResponse
+// @Failure 401 {object} response.UserSwaggerResponse
 // @Router /api/auth/users [post]
 func (h *UserHandler) CreateUser(c *gin.Context) {
 	var req request.CreateUserRequest
@@ -80,9 +80,9 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 // @Security BearerAuth
 // @Produce json
 // @Param id path string true "User ID"
-// @Success 200 {object} response.APIResponse
-// @Failure 401 {object} apperror.InitError
-// @Failure 404 {object} apperror.InitError
+// @Success 200 {object} response.UserSwaggerResponse
+// @Failure 401 {object} response.UserSwaggerResponse
+// @Failure 404 {object} response.UserSwaggerResponse
 // @Router /api/auth/users/{id} [get]
 func (h *UserHandler) GetUserByID(c *gin.Context) {
 	userID := c.Param("id")
@@ -103,10 +103,10 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 // @Produce json
 // @Param id path string true "User ID"
 // @Param data body request.UpdateUserRequest true "Updated user data"
-// @Success 201 {object} response.APIResponse
-// @Failure 400 {object} apperror.InitError
-// @Failure 401 {object} apperror.InitError
-// @Failure 404 {object} apperror.InitError
+// @Success 201 {object} response.UserSwaggerResponse
+// @Failure 400 {object} response.UserSwaggerResponse
+// @Failure 401 {object} response.UserSwaggerResponse
+// @Failure 404 {object} response.UserSwaggerResponse
 // @Router /api/auth/users/{id} [put]
 func (h *UserHandler) UpdateUser(c *gin.Context) {
 	var userID = c.Param("id")
@@ -130,8 +130,8 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 // @Produce json
 // @Param id path string true "User ID"
 // @Success 204 {object} nil
-// @Failure 401 {object} apperror.InitError
-// @Failure 404 {object} apperror.InitError
+// @Failure 401 {object} response.UserSwaggerResponse
+// @Failure 404 {object} response.UserSwaggerResponse
 // @Router /api/auth/users/{id} [delete]
 func (h *UserHandler) DeleteUser(c *gin.Context) {
 	userID := c.Param("id")

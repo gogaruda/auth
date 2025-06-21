@@ -5,13 +5,22 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gogaruda/auth/auth"
 	"github.com/gogaruda/auth/auth/config"
-	"github.com/gogaruda/auth/auth/middleware"
 	_ "github.com/gogaruda/auth/docs"
 	"github.com/gogaruda/auth/swagger"
+	"github.com/gogaruda/pkg/middleware"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"os"
+	"strings"
 )
+
+func getAllowedOrigins() []string {
+	origins := os.Getenv("ALLOWED_ORIGINS")
+	if origins == "" {
+		return []string{"http://localhost:3000"}
+	}
+	return strings.Split(origins, ",")
+}
 
 // Swagger documentation
 // @title Auth - REST API Docs
@@ -34,7 +43,7 @@ func main() {
 	app := auth.InitAuthModule(db)
 
 	r := gin.Default()
-	r.Use(middleware.CORSMiddleware())
+	r.Use(middleware.CORSMiddleware(getAllowedOrigins()))
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

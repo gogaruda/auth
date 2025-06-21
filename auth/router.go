@@ -6,7 +6,7 @@ import (
 	"github.com/gogaruda/auth/auth/handler"
 	"github.com/gogaruda/auth/auth/middleware"
 	"github.com/gogaruda/auth/auth/service"
-	"github.com/gogaruda/auth/pkg/validates"
+	"github.com/gogaruda/pkg/validates"
 )
 
 func RegisterAuthRoutes(rg *gin.RouterGroup, authService service.AuthService, userService service.UserService) {

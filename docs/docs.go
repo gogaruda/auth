@@ -42,19 +42,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.APIResponse"
+                            "$ref": "#/definitions/response.AuthSwaggerResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.AuthSwaggerResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.AuthSwaggerResponse"
                         }
                     }
                 }
@@ -78,13 +78,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.APIResponse"
+                            "$ref": "#/definitions/response.AuthSwaggerResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.AuthSwaggerResponse"
                         }
                     }
                 }
@@ -117,19 +117,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/response.APIResponse"
+                            "$ref": "#/definitions/response.AuthSwaggerResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.AuthSwaggerResponse"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.AuthSwaggerResponse"
                         }
                     }
                 }
@@ -169,13 +169,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.APIResponse"
+                            "$ref": "#/definitions/response.UserSwaggerResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.UserSwaggerResponse"
                         }
                     }
                 }
@@ -211,19 +211,19 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/response.APIResponse"
+                            "$ref": "#/definitions/response.UserSwaggerResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.UserSwaggerResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.UserSwaggerResponse"
                         }
                     }
                 }
@@ -256,19 +256,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/response.APIResponse"
+                            "$ref": "#/definitions/response.UserSwaggerResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.UserSwaggerResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.UserSwaggerResponse"
                         }
                     }
                 }
@@ -311,25 +311,25 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/response.APIResponse"
+                            "$ref": "#/definitions/response.UserSwaggerResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.UserSwaggerResponse"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.UserSwaggerResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.UserSwaggerResponse"
                         }
                     }
                 }
@@ -363,13 +363,13 @@ const docTemplate = `{
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.UserSwaggerResponse"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/apperror.InitError"
+                            "$ref": "#/definitions/response.UserSwaggerResponse"
                         }
                     }
                 }
@@ -377,18 +377,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "apperror.InitError": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "string"
-                },
-                "err": {},
-                "message": {
-                    "type": "string"
-                }
-            }
-        },
         "request.AuthLoginRequest": {
             "type": "object",
             "required": [
@@ -473,49 +461,67 @@ const docTemplate = `{
                 }
             }
         },
-        "response.APIResponse": {
+        "response.AuthSwaggerResponse": {
             "type": "object",
             "properties": {
                 "code": {
                     "type": "integer"
                 },
-                "data": {},
-                "errors": {},
-                "message": {
+                "data": {
                     "type": "string"
                 },
-                "meta": {
-                    "$ref": "#/definitions/response.MetaData"
-                },
-                "status": {
-                    "$ref": "#/definitions/response.Status"
+                "message": {
+                    "type": "string"
                 }
             }
         },
-        "response.MetaData": {
+        "response.RoleResponse": {
             "type": "object",
             "properties": {
-                "limit": {
-                    "type": "integer"
+                "id": {
+                    "type": "string"
                 },
-                "page": {
-                    "type": "integer"
-                },
-                "total": {
-                    "type": "integer"
+                "name": {
+                    "type": "string"
                 }
             }
         },
-        "response.Status": {
-            "type": "string",
-            "enum": [
-                "success",
-                "error"
-            ],
-            "x-enum-varnames": [
-                "StatusSuccess",
-                "StatusError"
-            ]
+        "response.UserResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.RoleResponse"
+                    }
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.UserSwaggerResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/response.UserResponse"
+                    }
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
         }
     },
     "securityDefinitions": {
