@@ -1,5 +1,9 @@
 # CHANGELOG.md
 
+## 1.3.1 (2025-06-21)
+### Fixed:
+ - Fixed Collate Table To utf8mb4_unicode_ci
+
 ## 1.3.0 (2025-06-20)
 ### Features:
  - Added Swagger Docs
