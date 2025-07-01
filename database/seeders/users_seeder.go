@@ -4,12 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/gogaruda/auth/pkg/utils"
 	"github.com/gogaruda/dbtx"
-	"github.com/gogaruda/pkg/utils"
 	"time"
 )
 
-func Users(db *sql.DB) error {
+func Users(db *sql.DB, newID *utils.ULIDCreate, hash *utils.BcryptHasher) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -20,8 +20,8 @@ func Users(db *sql.DB) error {
 			return fmt.Errorf("query roles gagal: %w", err)
 		}
 
-		userID := utils.NewULID()
-		passHash, _ := utils.GenerateHash("superadmin")
+		userID := newID.Create()
+		passHash, _ := hash.Generate("superadmin")
 		_, err = tx.ExecContext(ctx, `INSERT INTO users(id, username, email, password) VALUES(?, ?, ?, ?)`,
 			userID, "superadmin", "superadmin@gmail.com", passHash)
 		if err != nil {
@@ -50,11 +50,11 @@ func Users(db *sql.DB) error {
 		}
 
 		_, err = tx.ExecContext(ctx, `INSERT INTO profiles(id, user_id, full_name, address, gender) VALUES(?, ?, ?, ?, ?)`,
-			utils.NewULID(), userID, "Saya Super Admin Pertama", "Samarang - Garut", 1)
+			newID.Create(), userID, "Saya Super Admin Pertama", "Samarang - Garut", 1)
 		if err != nil {
 			return fmt.Errorf("query insert profiles gagal: %w", err)
 		}
-    
+
 		return nil
 	})
 }

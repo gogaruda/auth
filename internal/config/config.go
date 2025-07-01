@@ -9,23 +9,7 @@ type AppConfig struct {
 	DB     DBConfig
 	JWT    JWTConfig
 	Server ServerConfig
-}
-
-type DBConfig struct {
-	User string
-	Pass string
-	Host string
-	Port string
-	Name string
-}
-
-type JWTConfig struct {
-	Secret         string
-	AccessTokenTTL time.Duration
-}
-
-type ServerConfig struct {
-	Port string
+	Mode   GinModeConfig
 }
 
 func LoadConfig() *AppConfig {
@@ -44,13 +28,8 @@ func LoadConfig() *AppConfig {
 		Server: ServerConfig{
 			Port: getEnvOrDefault("SERVER_PORT", "8080"),
 		},
+		Mode: GinModeConfig{
+			Debug: getModeOrDefault("GIN_MODE", "debug"),
+		},
 	}
-}
-
-func getEnvOrDefault(key, fallback string) string {
-	val := os.Getenv(key)
-	if val == "" {
-		return fallback
-	}
-	return val
 }

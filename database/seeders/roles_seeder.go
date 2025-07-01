@@ -4,12 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/gogaruda/auth/pkg/utils"
 	"github.com/gogaruda/dbtx"
-	"github.com/gogaruda/pkg/utils"
 	"time"
 )
 
-func Roles(db *sql.DB) error {
+func Roles(db *sql.DB, newID *utils.ULIDCreate) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -22,7 +22,7 @@ func Roles(db *sql.DB) error {
 
 		roles := []string{"super admin", "tamu"}
 		for _, r := range roles {
-			_, err := stmt.ExecContext(ctx, utils.NewULID(), r)
+			_, err := stmt.ExecContext(ctx, newID.Create(), r)
 			if err != nil {
 				return fmt.Errorf("gagal insert roles: %w", err)
 			}

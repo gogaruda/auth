@@ -1,13 +1,16 @@
 package seeder
 
-import "database/sql"
+import (
+	"database/sql"
+	"github.com/gogaruda/auth/pkg/utils"
+)
 
-func SeedRun(db *sql.DB) error {
-	if err := Roles(db); err != nil {
+func SeedRun(db *sql.DB, newID *utils.ULIDCreate, hash *utils.BcryptHasher) error {
+	if err := Roles(db, newID); err != nil {
 		return err
 	}
 
-	if err := Users(db); err != nil {
+	if err := Users(db, newID, hash); err != nil {
 		return err
 	}
 

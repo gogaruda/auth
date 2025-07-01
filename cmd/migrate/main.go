@@ -1,9 +1,9 @@
 package main
 
 import (
-	"auth/database"
-	"auth/internal/bootstrap"
-	"auth/internal/config"
+	"github.com/gogaruda/auth/database"
+	"github.com/gogaruda/auth/internal/bootstrap"
+	"github.com/gogaruda/auth/internal/config"
 	"github.com/joho/godotenv"
 	"log"
 )

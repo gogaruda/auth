@@ -1,10 +1,10 @@
 package bootstrap
 
 import (
-	"auth/internal/config"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gogaruda/auth/internal/config"
 	"time"
 )
 

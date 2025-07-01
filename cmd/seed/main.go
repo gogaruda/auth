@@ -1,10 +1,11 @@
 package main
 
 import (
-	seeder "auth/database/seeders"
-	"auth/internal/bootstrap"
-	"auth/internal/config"
 	"fmt"
+	"github.com/gogaruda/auth/database/seeders"
+	"github.com/gogaruda/auth/internal/bootstrap"
+	"github.com/gogaruda/auth/internal/config"
+	"github.com/gogaruda/auth/pkg/utils"
 	"github.com/joho/godotenv"
 	"log"
 )
@@ -17,7 +18,10 @@ func main() {
 		log.Fatal("koneksi ke database gagal:", err)
 	}
 
-	if err := seeder.SeedRun(db); err != nil {
+	newID := utils.NewULIDCreate()
+	hash := utils.NewBcryptHasher()
+
+	if err := seeder.SeedRun(db, newID, hash); err != nil {
 		log.Fatalf("seeding gagal: %w", err)
 	}
 

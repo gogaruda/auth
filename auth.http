@@ -1,0 +1,12 @@
+GET http://localhost:8080/api/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTEzOTQ3MjIsImlhdCI6MTc1MTM5MzgyMiwicm9sZXMiOlsiMDFKWjM1WDdRRk1BOUQ2SlM2RDkzVEFTRTgiXSwidG9rZW5fdmVyc2lvbiI6IjAxSlozSzlTMzI0S0VTVE5FV1ZTWVI0M05aIiwidXNlcl9pZCI6IjAxSlozNVg3UVAzVzg1OVc4SzgyNVkyNUdRIn0.fSpm2tnzK8pP9Fm_8e4M06SfgckwX9inEfGnyYIfQjs
+Accept: application/json
+
+### Login
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{
+  "identifier": "superadmin",
+  "password": "superadmin"
+}
