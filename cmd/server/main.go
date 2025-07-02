@@ -5,7 +5,6 @@ import (
 	"github.com/gogaruda/auth/internal"
 	"github.com/gogaruda/auth/internal/bootstrap"
 	"github.com/gogaruda/auth/internal/config"
-	"github.com/gogaruda/auth/internal/middleware"
 	"github.com/joho/godotenv"
 	"log"
 )
@@ -20,7 +19,6 @@ func main() {
 
 	gin.SetMode(cfg.Mode.Debug)
 	r := gin.Default()
-	r.Use(middleware.CORSMiddleware(cfg.Cors))
 
 	app := bootstrap.InitBootstrap(db, cfg)
 	internal.RouteRegister(r, app)

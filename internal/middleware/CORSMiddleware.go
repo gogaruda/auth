@@ -2,17 +2,16 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/gogaruda/auth/internal/config"
 	"net/http"
 	"strings"
 )
 
-func CORSMiddleware(corsCfg config.CORSConfig) gin.HandlerFunc {
+func (m *middleware) CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		origin := c.Request.Header.Get("Origin")
 
 		allowed := false
-		for _, o := range corsCfg.AllowOrigins {
+		for _, o := range m.corsCfg.AllowOrigins {
 			if o == origin {
 				allowed = true
 				break
@@ -23,10 +22,10 @@ func CORSMiddleware(corsCfg config.CORSConfig) gin.HandlerFunc {
 			c.Writer.Header().Set("Access-Control-Allow-Origin", origin)
 		}
 
-		c.Writer.Header().Set("Access-Control-Allow-Methods", strings.Join(corsCfg.AllowMethods, ","))
-		c.Writer.Header().Set("Access-Control-Allow-Headers", strings.Join(corsCfg.AllowHeaders, ","))
+		c.Writer.Header().Set("Access-Control-Allow-Methods", strings.Join(m.corsCfg.AllowMethods, ","))
+		c.Writer.Header().Set("Access-Control-Allow-Headers", strings.Join(m.corsCfg.AllowHeaders, ","))
 
-		if corsCfg.AllowCredentials {
+		if m.corsCfg.AllowCredentials {
 			c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		}
 

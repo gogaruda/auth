@@ -1,28 +1,13 @@
 package middleware
 
 import (
-	"database/sql"
 	"github.com/gin-gonic/gin"
-	"github.com/gogaruda/auth/internal/config"
 	"github.com/gogaruda/auth/internal/model"
 	"github.com/gogaruda/auth/pkg/response"
 	"github.com/golang-jwt/jwt/v5"
 	"strings"
 	"time"
 )
-
-type Middleware interface {
-	AuthMiddleware() gin.HandlerFunc
-}
-
-type middleware struct {
-	db  *sql.DB
-	cfg config.JWTConfig
-}
-
-func NewMiddleware(d *sql.DB, c config.JWTConfig) Middleware {
-	return &middleware{db: d, cfg: c}
-}
 
 func (m *middleware) AuthMiddleware() gin.HandlerFunc {
 	secret := m.cfg.Secret
