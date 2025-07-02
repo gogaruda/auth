@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gogaruda/auth/internal/bootstrap"
 	"github.com/gogaruda/auth/internal/handler"
+	"github.com/gogaruda/auth/internal/middleware"
 	"github.com/gogaruda/valigo"
 	"net/http"
 )
@@ -20,7 +21,7 @@ func RouteRegister(r *gin.Engine, app *bootstrap.Service) {
 
 	auth := api.Group("/")
 	auth.Use(app.Middleware.AuthMiddleware())
-	auth.GET("/coba", func(c *gin.Context) {
+	auth.GET("/coba", app.Middleware.RoleMiddleware(middleware.MatchAll, "super admin", "admin"), func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusOK,
 			"status":  "success",

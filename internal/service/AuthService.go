@@ -80,7 +80,7 @@ func (s *authService) Login(ctx context.Context, req request.LoginRequest) (stri
 
 	var roles []string
 	for _, r := range user.Roles {
-		roles = append(roles, r.ID)
+		roles = append(roles, r.Name)
 	}
 
 	token, err := s.jwt.Create(user.ID, newVersion, roles, s.config)
