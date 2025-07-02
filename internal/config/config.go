@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"strings"
 	"time"
 )
 
@@ -10,6 +11,7 @@ type AppConfig struct {
 	JWT    JWTConfig
 	Server ServerConfig
 	Mode   GinModeConfig
+	Cors   CORSConfig
 }
 
 func LoadConfig() *AppConfig {
@@ -30,6 +32,12 @@ func LoadConfig() *AppConfig {
 		},
 		Mode: GinModeConfig{
 			Debug: getModeOrDefault("GIN_MODE", "debug"),
+		},
+		Cors: CORSConfig{
+			AllowOrigins:     strings.Split(os.Getenv("CORS_ALLOW_ORIGINS"), ","),
+			AllowMethods:     strings.Split(os.Getenv("CORS_ALLOW_METHODS"), ","),
+			AllowHeaders:     strings.Split(os.Getenv("CORS_ALLOW_HEADERS"), ","),
+			AllowCredentials: os.Getenv("CORS_ALLOW_CREDENTIALS") == "true",
 		},
 	}
 }
