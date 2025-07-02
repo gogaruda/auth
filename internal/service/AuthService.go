@@ -11,6 +11,7 @@ import (
 
 type AuthService interface {
 	Login(ctx context.Context, req request.LoginRequest) (string, error)
+	Logout(userID string) error
 }
 
 type authService struct {
@@ -46,4 +47,13 @@ func (s *authService) Login(ctx context.Context, req request.LoginRequest) (stri
 	}
 
 	return token, nil
+}
+
+func (s *authService) Logout(userID string) error {
+	_, err := s.authRepo.UpdateTokenVersion(userID)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

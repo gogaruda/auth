@@ -5,6 +5,7 @@ import (
 	"github.com/gogaruda/apperror"
 	"github.com/gogaruda/auth/internal/dto/request"
 	"github.com/gogaruda/auth/internal/service"
+	"github.com/gogaruda/auth/pkg/response"
 	"github.com/gogaruda/valigo"
 	"net/http"
 )
@@ -35,4 +36,14 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		"status": "success",
 		"token":  token,
 	})
+}
+
+func (h *AuthHandler) Logout(c *gin.Context) {
+	userID, _ := c.Get("user_id")
+	if err := h.authService.Logout(userID.(string)); err != nil {
+		apperror.HandleHTTPError(c, err)
+		return
+	}
+
+	response.OK(c, nil, "logout success!", nil)
 }
