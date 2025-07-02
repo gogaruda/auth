@@ -53,8 +53,6 @@ github.com/gogaruda/apperror v1.2.2 h1:2qyJfFQpc9k8FV6pCKgqjM/QlE+JQFUJkMmEggtIJ
 github.com/gogaruda/apperror v1.2.2/go.mod h1:LDIWPoecO971Uw1hZblg4NEBCCetqFzvJyqaFEMTWl0=
 github.com/gogaruda/dbtx v1.0.1 h1:EEtJ9CHyf6zxbZ4rqaLTfDPGKUpBlFUKSvRA+HyRYd8=
 github.com/gogaruda/dbtx v1.0.1/go.mod h1:Gkvc2r5KYabaKgZtbgvucpAGDyZWndpi+kohMweY3o0=
-github.com/gogaruda/valigo v1.0.1 h1:WRAf44NQjQSyQjW1bEtUgMAne9JbWqR7XXkyqEiqyFw=
-github.com/gogaruda/valigo v1.0.1/go.mod h1:VEMTQ5xUIFRxZKl2NjZB8ukqU6rgBwchQvxPl68eut8=
 github.com/gogaruda/valigo v1.0.2 h1:s2DH/BUohkQoV5HEGQWt0k7SoRU7ODgTdGPzkjee7E0=
 github.com/gogaruda/valigo v1.0.2/go.mod h1:VEMTQ5xUIFRxZKl2NjZB8ukqU6rgBwchQvxPl68eut8=
 github.com/gogo/protobuf v1.3.2 h1:Ov1cvc58UF3b5XjBnZv7+opcTcQFZebYjWzi34vdm4Q=

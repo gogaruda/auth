@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"github.com/gogaruda/apperror"
 	"github.com/gogaruda/auth/internal/model"
-	"github.com/gogaruda/auth/pkg/utils"
 	"github.com/gogaruda/dbtx"
 	"strings"
 )
@@ -18,16 +17,15 @@ type AuthRepository interface {
 	CheckRoles(ctx context.Context, roles []string) ([]model.RoleModel, error)
 	Create(ctx context.Context, user model.UserModel) error
 	Identifier(ctx context.Context, identifier string) (*model.UserModel, error)
-	UpdateTokenVersion(userID string) (string, error)
+	UpdateTokenVersion(userID, newVersion string) error
 }
 
 type authRepository struct {
 	database *sql.DB
-	id       utils.ULIDs
 }
 
-func NewAuthRepository(db *sql.DB, i utils.ULIDs) AuthRepository {
-	return &authRepository{database: db, id: i}
+func NewAuthRepository(db *sql.DB) AuthRepository {
+	return &authRepository{database: db}
 }
 
 func (r *authRepository) IsUsernameExists(ctx context.Context, username string) (bool, error) {
@@ -189,12 +187,11 @@ func (r *authRepository) Identifier(ctx context.Context, identifier string) (*mo
 	return &user, nil
 }
 
-func (r *authRepository) UpdateTokenVersion(userID string) (string, error) {
-	newVersion := r.id.Create()
+func (r *authRepository) UpdateTokenVersion(userID, newVersion string) error {
 	_, err := r.database.Exec(`UPDATE users SET token_version = ? WHERE id = ?`, newVersion, userID)
 	if err != nil {
-		return "", apperror.New(apperror.CodeDBError, "query update token_version gagal", err)
+		return apperror.New(apperror.CodeDBError, "query update token_version gagal", err)
 	}
 
-	return newVersion, nil
+	return nil
 }

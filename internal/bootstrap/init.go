@@ -19,7 +19,7 @@ func InitBootstrap(db *sql.DB, config *config.AppConfig) *Service {
 	jwt := utils.NewJWTGenerated()
 	id := utils.NewULIDCreate()
 
-	authRepo := repository.NewAuthRepository(db, id)
+	authRepo := repository.NewAuthRepository(db)
 
 	authService := service.NewAuthService(authRepo, config, hasher, jwt, id)
 

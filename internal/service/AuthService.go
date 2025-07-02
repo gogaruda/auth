@@ -73,8 +73,8 @@ func (s *authService) Login(ctx context.Context, req request.LoginRequest) (stri
 		return "", err
 	}
 
-	newVersion, err := s.authRepo.UpdateTokenVersion(user.ID)
-	if err != nil {
+	newVersion := s.id.Create()
+	if err := s.authRepo.UpdateTokenVersion(user.ID, newVersion); err != nil {
 		return "", err
 	}
 
@@ -92,8 +92,7 @@ func (s *authService) Login(ctx context.Context, req request.LoginRequest) (stri
 }
 
 func (s *authService) Logout(userID string) error {
-	_, err := s.authRepo.UpdateTokenVersion(userID)
-	if err != nil {
+	if err := s.authRepo.UpdateTokenVersion(userID, s.id.Create()); err != nil {
 		return err
 	}
 
