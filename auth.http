@@ -1,9 +1,9 @@
 POST http://localhost:8080/api/logout
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTE0NDYwMzQsImlhdCI6MTc1MTQ0NTEzNCwicm9sZXMiOlsiMDFKWjNOMUVNME5WV1M2VFlYV0VRN0JNMlgiXSwidG9rZW5fdmVyc2lvbiI6IjAxSlo1NDdRMkNaTjRDU0ZKVkNRUFhZRFBZIiwidXNlcl9pZCI6IjAxSlozTjFFTUJZVDRYVDE5MVpaQzU4R1M3In0.Cp1yCRkBSmABoybmzghIZNVp639vz8hfaek8CnUM_PI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTE0NDk3MzMsImlhdCI6MTc1MTQ0ODgzMywicm9sZXMiOlsiMDFKWjNOMUVNME5WV1M2VFlYV0VRN0JNMlgiXSwidG9rZW5fdmVyc2lvbiI6IjAxSlo1N1JLNTNXVlE5UkVWV0Q4WjJHWUNXIiwidXNlcl9pZCI6IjAxSlozTjFFTUJZVDRYVDE5MVpaQzU4R1M3In0.bs4B3R_6ijSR1F_ZfhP7AX-ULSJPkqIB8idxnacLqz0
 
 ###
 GET http://localhost:8080/api/coba
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTE0NDYwMzQsImlhdCI6MTc1MTQ0NTEzNCwicm9sZXMiOlsiMDFKWjNOMUVNME5WV1M2VFlYV0VRN0JNMlgiXSwidG9rZW5fdmVyc2lvbiI6IjAxSlo1NDdRMkNaTjRDU0ZKVkNRUFhZRFBZIiwidXNlcl9pZCI6IjAxSlozTjFFTUJZVDRYVDE5MVpaQzU4R1M3In0.Cp1yCRkBSmABoybmzghIZNVp639vz8hfaek8CnUM_PI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTE0NDk3MzMsImlhdCI6MTc1MTQ0ODgzMywicm9sZXMiOlsiMDFKWjNOMUVNME5WV1M2VFlYV0VRN0JNMlgiXSwidG9rZW5fdmVyc2lvbiI6IjAxSlo1N1JLNTNXVlE5UkVWV0Q4WjJHWUNXIiwidXNlcl9pZCI6IjAxSlozTjFFTUJZVDRYVDE5MVpaQzU4R1M3In0.bs4B3R_6ijSR1F_ZfhP7AX-ULSJPkqIB8idxnacLqz0
 Accept: application/json
 
 ### Login
@@ -13,4 +13,14 @@ Content-Type: application/json
 {
   "identifier": "superadmin",
   "password": "superadmin"
+}
+
+### register
+POST http://localhost:8080/api/register
+Content-Type: application/json
+
+{
+  "username": "tamu1",
+  "email": "tamu1@gmail.com",
+  "password": "tamu1@gmail.com"
 }

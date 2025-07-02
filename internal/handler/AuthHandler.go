@@ -19,6 +19,21 @@ func NewAuthHandler(a service.AuthService, v *valigo.Valigo) *AuthHandler {
 	return &AuthHandler{authService: a, valid: v}
 }
 
+func (h *AuthHandler) Register(c *gin.Context) {
+	var req request.RegisterRequest
+	req.Roles = []string{"tamu"}
+	if !h.valid.ValigoJSON(c, &req) {
+		return
+	}
+
+	if err := h.authService.Register(c.Request.Context(), req); err != nil {
+		apperror.HandleHTTPError(c, err)
+		return
+	}
+
+	response.Created(c, nil, "registrasi berhasil")
+}
+
 func (h *AuthHandler) Login(c *gin.Context) {
 	var req request.LoginRequest
 	if !h.valid.ValigoJSON(c, &req) {

@@ -15,6 +15,7 @@ func RouteRegister(r *gin.Engine, app *bootstrap.Service) {
 
 	r.Use(app.Middleware.CORSMiddleware())
 	api := r.Group("/api")
+	api.POST("/register", authHandler.Register)
 	api.POST("/login", authHandler.Login)
 
 	auth := api.Group("/")

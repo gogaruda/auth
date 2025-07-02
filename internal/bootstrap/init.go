@@ -21,7 +21,7 @@ func InitBootstrap(db *sql.DB, config *config.AppConfig) *Service {
 
 	authRepo := repository.NewAuthRepository(db, id)
 
-	authService := service.NewAuthService(authRepo, config, hasher, jwt)
+	authService := service.NewAuthService(authRepo, config, hasher, jwt, id)
 
 	newMiddleware := middleware.NewMiddleware(db, config.JWT, config.Cors)
 	return &Service{
