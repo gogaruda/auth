@@ -151,8 +151,8 @@ func (r *authRepository) Identifier(ctx context.Context, identifier string) (*mo
 	var roles []model.RoleModel
 
 	err := dbtx.WithTxContext(ctx, r.database, func(ctx context.Context, tx *sql.Tx) error {
-		err := tx.QueryRowContext(ctx, `SELECT id, password FROM users WHERE username = ? OR email = ?`, identifier, identifier).
-			Scan(&user.ID, &user.Password)
+		err := tx.QueryRowContext(ctx, `SELECT id, password, is_verified FROM users WHERE username = ? OR email = ?`, identifier, identifier).
+			Scan(&user.ID, &user.Password, &user.IsVerified)
 		if err != nil {
 			return apperror.New(apperror.CodeDBError, "query select users gagal", err)
 		}

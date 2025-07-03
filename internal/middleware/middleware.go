@@ -10,6 +10,7 @@ type Middleware interface {
 	AuthMiddleware() gin.HandlerFunc
 	CORSMiddleware() gin.HandlerFunc
 	RoleMiddleware(matchType RoleMatchType, requiredRoles ...string) gin.HandlerFunc
+	EmailVerifiedMiddleware() gin.HandlerFunc
 }
 
 type middleware struct {

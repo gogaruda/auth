@@ -6,6 +6,6 @@ type UserModel struct {
 	Email        string
 	Password     string
 	TokenVersion string
-	IsVerified   string
+	IsVerified   bool
 	Roles        []RoleModel
 }

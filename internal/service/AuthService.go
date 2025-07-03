@@ -95,7 +95,7 @@ func (s *authService) Login(ctx context.Context, req request.LoginRequest) (stri
 		roles = append(roles, r.Name)
 	}
 
-	token, err := s.jwt.Create(user.ID, newVersion, roles, s.config)
+	token, err := s.jwt.Create(user.ID, newVersion, user.IsVerified, roles, s.config)
 	if err != nil {
 		return "", apperror.New(apperror.CodeInternalError, "gagal buat JWT", err)
 	}

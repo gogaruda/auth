@@ -93,6 +93,7 @@ func (m *middleware) AuthMiddleware() gin.HandlerFunc {
 		}
 
 		c.Set("user_id", userID)
+		c.Set("is_verified", claims["is_verified"].(bool))
 		c.Set("roles", roles)
 
 		c.Next()

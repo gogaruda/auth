@@ -23,6 +23,17 @@ func RouteRegister(r *gin.Engine, app *bootstrap.Service) {
 
 	auth := api.Group("/")
 	auth.Use(app.Middleware.AuthMiddleware())
+
+	eVerify := auth.Group("/")
+	eVerify.Use(app.Middleware.EmailVerifiedMiddleware())
+	eVerify.GET("/coba-verify", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"code":    http.StatusOK,
+			"status":  "success",
+			"meesage": "selamat datang, Anda sudah verifikasi email",
+		})
+	})
+
 	auth.GET("/coba", app.Middleware.RoleMiddleware(middleware.MatchAll, "super admin", "admin"), func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"code":    http.StatusOK,
