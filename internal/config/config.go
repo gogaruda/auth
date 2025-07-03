@@ -48,7 +48,7 @@ func LoadConfig() *AppConfig {
 			MailUsername:    os.Getenv("MAIL_USERNAME"),
 			MailPassword:    os.Getenv("MAIL_PASSWORD"),
 			MailFromAddress: os.Getenv("MAIL_FROM_ADDRESS"),
-			FrontVerifyUrl:  os.Getenv("FRONT_VERIFY_URL"),
+			FrontVerifyUrl:  os.Getenv("FRONTEND_VERIFY_URL"),
 		},
 	}
 }
