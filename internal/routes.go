@@ -13,10 +13,12 @@ func RouteRegister(r *gin.Engine, app *bootstrap.Service) {
 	v := valigo.NewValigo()
 
 	authHandler := handler.NewAuthHandler(app.AuthService, v)
+	emailHandler := handler.NewEmailVerificationHandler(app.EmailVerificationService)
 
 	r.Use(app.Middleware.CORSMiddleware())
 	api := r.Group("/api")
 	api.POST("/register", authHandler.Register)
+	api.GET("/email-verification", emailHandler.VerifyEmail)
 	api.POST("/login", authHandler.Login)
 
 	auth := api.Group("/")

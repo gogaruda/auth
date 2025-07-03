@@ -22,8 +22,8 @@ func Users(db *sql.DB, newID *utils.ULIDCreate, hash *utils.BcryptHasher) error 
 
 		userID := newID.Create()
 		passHash, _ := hash.Generate("superadmin")
-		_, err = tx.ExecContext(ctx, `INSERT INTO users(id, username, email, password) VALUES(?, ?, ?, ?)`,
-			userID, "superadmin", "superadmin@gmail.com", passHash)
+		_, err = tx.ExecContext(ctx, `INSERT INTO users(id, username, email, password, is_verified) VALUES(?, ?, ?, ?, ?)`,
+			userID, "superadmin", "superadmin@gmail.com", passHash, true)
 		if err != nil {
 			return fmt.Errorf("query insert users gagal: %w", err)
 		}

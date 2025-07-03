@@ -6,5 +6,6 @@ type UserModel struct {
 	Email        string
 	Password     string
 	TokenVersion string
+	IsVerified   string
 	Roles        []RoleModel
 }

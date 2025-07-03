@@ -20,7 +20,7 @@ POST http://localhost:8080/api/register
 Content-Type: application/json
 
 {
-  "username": "tamu1",
-  "email": "tamu1@gmail.com",
-  "password": "tamu1@gmail.com"
+  "username": "irawankilmer",
+  "email": "irawankilmer@gmail.com",
+  "password": "irawankilmer@gmail.com"
 }

@@ -1,0 +1,9 @@
+GET http://localhost:8080/api/email-verification?token=07603a9ba04a2d10b405879129930975d4184427cf546f77a62a92f5d691f70a
+Accept: application/json
+
+###
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+  ?generated-in=GoLand
+
+###

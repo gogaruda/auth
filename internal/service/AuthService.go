@@ -23,10 +23,18 @@ type authService struct {
 	hash     utils.Hash
 	jwt      utils.JWTs
 	id       utils.ULIDs
+	email    EmailVerificationService
 }
 
-func NewAuthService(a repository.AuthRepository, cfg *config.AppConfig, h utils.Hash, j utils.JWTs, i utils.ULIDs) AuthService {
-	return &authService{authRepo: a, config: cfg, hash: h, jwt: j, id: i}
+func NewAuthService(
+	a repository.AuthRepository,
+	cfg *config.AppConfig,
+	h utils.Hash,
+	j utils.JWTs,
+	i utils.ULIDs,
+	e EmailVerificationService,
+) AuthService {
+	return &authService{authRepo: a, config: cfg, hash: h, jwt: j, id: i, email: e}
 }
 
 func (s *authService) Register(ctx context.Context, req request.RegisterRequest) error {
@@ -61,6 +69,10 @@ func (s *authService) Register(ctx context.Context, req request.RegisterRequest)
 	}
 
 	if err := s.authRepo.Create(ctx, user); err != nil {
+		return err
+	}
+
+	if err := s.email.SendVerification(ctx, user); err != nil {
 		return err
 	}
 

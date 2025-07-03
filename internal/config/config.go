@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -12,9 +13,11 @@ type AppConfig struct {
 	Server ServerConfig
 	Mode   GinModeConfig
 	Cors   CORSConfig
+	Mail   EmailConfig
 }
 
 func LoadConfig() *AppConfig {
+	port, _ := strconv.Atoi(os.Getenv("MAIL_PORT"))
 	return &AppConfig{
 		DB: DBConfig{
 			User: os.Getenv("DB_USER"),
@@ -38,6 +41,14 @@ func LoadConfig() *AppConfig {
 			AllowMethods:     strings.Split(os.Getenv("CORS_ALLOW_METHODS"), ","),
 			AllowHeaders:     strings.Split(os.Getenv("CORS_ALLOW_HEADERS"), ","),
 			AllowCredentials: os.Getenv("CORS_ALLOW_CREDENTIALS") == "true",
+		},
+		Mail: EmailConfig{
+			MailHost:        os.Getenv("MAIL_HOST"),
+			MailPort:        port,
+			MailUsername:    os.Getenv("MAIL_USERNAME"),
+			MailPassword:    os.Getenv("MAIL_PASSWORD"),
+			MailFromAddress: os.Getenv("MAIL_FROM_ADDRESS"),
+			FrontVerifyUrl:  os.Getenv("FRONT_VERIFY_URL"),
 		},
 	}
 }
