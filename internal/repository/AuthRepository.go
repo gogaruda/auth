@@ -51,15 +51,20 @@ func (r *authRepository) IsEmailExists(ctx context.Context, email string) (bool,
 
 func (r *authRepository) Create(ctx context.Context, user model.UserModel) error {
 	return dbtx.WithTxContext(ctx, r.db, func(ctx context.Context, tx *sql.Tx) error {
-		_, err := tx.ExecContext(ctx, `INSERT INTO users(id, username, email, password) VALUES(?, ?, ?, ?)`,
-			user.ID, user.Username, user.Email, user.Password)
+		_, err := tx.ExecContext(ctx, `INSERT INTO 
+			users(id, username, email, password, token_version, google_id, is_verified, created_by_admin) 
+			VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
+			user.ID, user.Username, user.Email, user.Password,
+			user.TokenVersion, user.GoogleID, user.IsVerified, user.CreatedByAdmin)
 		if err != nil {
 			return apperror.New(apperror.CodeDBError, "query insert users gagal", err)
 		}
 
-		_, err = tx.ExecContext(ctx, `INSERT INTO username_history(username) VALUES(?)`, user.Username)
-		if err != nil {
-			return apperror.New(apperror.CodeDBError, "query insert username_history gagal", err)
+		if user.Username != nil {
+			_, err = tx.ExecContext(ctx, `INSERT INTO username_history(username) VALUES(?)`, user.Username)
+			if err != nil {
+				return apperror.New(apperror.CodeDBError, "query insert username_history gagal", err)
+			}
 		}
 
 		_, err = tx.ExecContext(ctx, `INSERT INTO email_history(email) VALUES(?)`, user.Email)

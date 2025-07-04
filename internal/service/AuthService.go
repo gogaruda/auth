@@ -59,11 +59,15 @@ func (s *authService) Register(ctx context.Context, req request.RegisterRequest)
 
 	hashPass, _ := s.ut.GenerateHash(req.Password)
 	user := model.UserModel{
-		ID:       s.ut.GenerateULID(),
-		Username: &req.Username,
-		Email:    req.Email,
-		Password: &hashPass,
-		Roles:    roles,
+		ID:             s.ut.GenerateULID(),
+		Username:       &req.Username,
+		Email:          req.Email,
+		Password:       &hashPass,
+		TokenVersion:   nil,
+		GoogleID:       nil,
+		IsVerified:     false,
+		CreatedByAdmin: false,
+		Roles:          roles,
 	}
 
 	if err := s.authRepo.Create(ctx, user); err != nil {

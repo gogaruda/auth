@@ -1,4 +1,4 @@
-GET http://localhost:8080/api/email-verification?token=15af1e3fa1413c2c75744975b381053db029eda0933e6f84935e7a711de94037
+GET http://localhost:8080/api/email-verification?token=ef19568a03fb3539bde32e396068a8380aa567a53d876cbe60f31bf88e0e53f1
 Accept: application/json
 
 ###

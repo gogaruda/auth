@@ -52,14 +52,15 @@ func (s *googleAuthService) Callback(ctx context.Context, code string) (string, 
 
 	user, err := s.userRepo.FindByEmail(ctx, email)
 	if err != nil {
+		tokenVersion := s.ut.GenerateULID()
 		// Buat user baru
 		if errors.Is(err, sql.ErrNoRows) {
 			user = &model.UserModel{
 				ID:             s.ut.GenerateULID(),
-				Username:       s.ut.GenerateUsernameFromName(userInfo.Name),
+				Username:       nil,
 				Email:          userInfo.Email,
 				Password:       nil,
-				TokenVersion:   s.ut.GenerateULID(),
+				TokenVersion:   &tokenVersion,
 				GoogleID:       &userInfo.Id,
 				IsVerified:     true,
 				CreatedByAdmin: false,

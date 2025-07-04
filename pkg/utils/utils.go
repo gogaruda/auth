@@ -7,7 +7,6 @@ type Utils interface {
 	GenerateULID() string
 	GenerateHash(password string) (string, error)
 	CompareHash(hash, password string) bool
-	GenerateUsernameFromName(name string) string
 }
 
 type utils struct {

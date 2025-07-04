@@ -71,7 +71,7 @@ func (m *middleware) AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		if user.TokenVersion != tokenVersion {
+		if *user.TokenVersion != tokenVersion {
 			response.Unauthorized(c, "token sudah tidak berlaku, silahkan login lagi!")
 			return
 		}

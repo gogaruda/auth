@@ -53,7 +53,7 @@ func (r *userRepository) FindByEmail(ctx context.Context, email string) (*model.
 func (r *userRepository) FindByID(ctx context.Context, userID string) (*model.UserModel, error) {
 	var user model.UserModel
 	var tokenVersion sql.NullString
-	user.TokenVersion = tokenVersion.String
+	user.TokenVersion = &tokenVersion.String
 	err := r.db.QueryRowContext(ctx, `SELECT id, username, email, password, token_version, is_verified FROM users WHERE id = ? LIMIT 1`, userID).
 		Scan(&user.ID, &user.Username, &user.Email, &user.Password, &tokenVersion, &user.IsVerified)
 	if err != nil {
