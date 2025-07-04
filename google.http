@@ -1,0 +1,6 @@
+GET http://localhost:8080/api/google/callback?state=state-random&code=4%2F0AVMBsJjMNcLQRT1TH5dPZMIzOVnNRbwcMEujndkdIi1IBwxhjqKviJHNvciCjy3O5j1B7w&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=0&prompt=none
+Accept: application/json
+
+###
+GET http://localhost:8080/api/google/login
+Accept: application/json

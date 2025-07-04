@@ -19,12 +19,23 @@ type GoogleAuthService interface {
 
 type googleAuthService struct {
 	userRepo repository.UserRepository
+	roleRepo repository.RoleRepository
+	authRepo repository.AuthRepository
 	cfg      *config.AppConfig
 	ut       utils.Utils
 }
 
-func NewGoogleAuthService(r repository.UserRepository, c *config.AppConfig, u utils.Utils) GoogleAuthService {
-	return &googleAuthService{userRepo: r, cfg: c, ut: u}
+func NewGoogleAuthService(
+	r repository.UserRepository,
+	rr repository.RoleRepository,
+	au repository.AuthRepository,
+	c *config.AppConfig,
+	u utils.Utils) GoogleAuthService {
+	return &googleAuthService{
+		userRepo: r,
+		roleRepo: rr,
+		cfg:      c,
+		ut:       u, authRepo: au}
 }
 
 func (s *googleAuthService) Login() string {
@@ -49,31 +60,14 @@ func (s *googleAuthService) Callback(ctx context.Context, code string) (string, 
 	}
 
 	email := userInfo.Email
+	var finalUser *model.UserModel
+	newTokenVersion := s.ut.GenerateULID()
 
+	// Cari user berdasarkan email
 	user, err := s.userRepo.FindByEmail(ctx, email)
-	if err != nil {
-		tokenVersion := s.ut.GenerateULID()
-		// Buat user baru
-		if errors.Is(err, sql.ErrNoRows) {
-			user = &model.UserModel{
-				ID:             s.ut.GenerateULID(),
-				Username:       nil,
-				Email:          userInfo.Email,
-				Password:       nil,
-				TokenVersion:   &tokenVersion,
-				GoogleID:       &userInfo.Id,
-				IsVerified:     true,
-				CreatedByAdmin: false,
-			}
-
-			if err := s.userRepo.Create(ctx, *user); err != nil {
-				return "", err
-			}
-		} else {
-			return "", err
-		}
-	} else {
-		// User sudah ada
+	switch {
+	case err == nil:
+		// User sudah terdaftar
 		if user.GoogleID == nil {
 			user.GoogleID = &userInfo.Id
 			if err := s.userRepo.UpdateGoogleID(ctx, user.ID, *user.GoogleID); err != nil {
@@ -81,11 +75,56 @@ func (s *googleAuthService) Callback(ctx context.Context, code string) (string, 
 			}
 		}
 
-		// Jika user belum verifikasi email tolak login
 		if user.CreatedByAdmin && !user.IsVerified {
-			return "", apperror.New(apperror.CodeForbidden, "akun harus verifikasi email terlebih dahulu", err)
+			return "", apperror.New("[EMAIL_NOT_VERIFIED]", "akun harus verifikasi email terlebih dahulu", nil, 403)
 		}
+
+		if err := s.authRepo.UpdateTokenVersion(user.ID, newTokenVersion); err != nil {
+			return "", err
+		}
+
+		finalUser = user
+
+	case errors.Is(err, sql.ErrNoRows):
+		tamuRole, err := s.roleRepo.CheckRoles(ctx, []string{"tamu"})
+		if err != nil {
+			return "", err
+		}
+
+		newUser := model.UserModel{
+			ID:             s.ut.GenerateULID(),
+			Username:       nil,
+			Email:          email,
+			Password:       nil,
+			TokenVersion:   &newTokenVersion,
+			GoogleID:       &userInfo.Id,
+			IsVerified:     true,
+			CreatedByAdmin: false,
+			Roles:          tamuRole,
+		}
+
+		if err := s.userRepo.Create(ctx, newUser); err != nil {
+			return "", err
+		}
+
+		finalUser = &newUser
+
+	default:
+		return "", apperror.New(apperror.CodeDBError, "gagal mencari user", err)
 	}
 
-	return "", nil
+	// ambil roles
+	var roles []string
+	for _, r := range finalUser.Roles {
+		roles = append(roles, r.Name)
+	}
+
+	finalUser.TokenVersion = &newTokenVersion
+
+	tokenString, err := s.ut.GenerateJWT(finalUser.ID, newTokenVersion, finalUser.IsVerified, roles, s.cfg)
+	if err != nil {
+		return "", apperror.New(apperror.CodeInternalError, "gagal buat JWT", err)
+	}
+
+	return tokenString, nil
 }

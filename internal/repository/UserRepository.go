@@ -3,8 +3,10 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"github.com/gogaruda/apperror"
 	"github.com/gogaruda/auth/internal/model"
+	"github.com/gogaruda/dbtx"
 )
 
 type UserRepository interface {
@@ -24,27 +26,84 @@ func NewUserRepository(db *sql.DB) UserRepository {
 }
 
 func (r *userRepository) Create(ctx context.Context, user model.UserModel) error {
-	query := `INSERT INTO users(id, username, email, password, token_version, google_id, is_verified, created_by_admin)
-						VALUES(?, ?, ?, ?, ?, ?, ?, ?)`
-	_, err := r.db.ExecContext(ctx, query,
-		user.ID, user.Username, user.Email, user.Password,
-		user.TokenVersion, user.GoogleID, user.IsVerified, user.CreatedByAdmin)
-	if err != nil {
-		return apperror.New(apperror.CodeDBError, "query insert users gagal", err)
-	}
+	return dbtx.WithTxContext(ctx, r.db, func(ctx context.Context, tx *sql.Tx) error {
+		_, err := tx.ExecContext(ctx, `INSERT INTO 
+			users(id, username, email, password, token_version, google_id, is_verified, created_by_admin) 
+			VALUES(?, ?, ?, ?, ?, ?, ?, ?)`,
+			user.ID, user.Username, user.Email, user.Password,
+			user.TokenVersion, user.GoogleID, user.IsVerified, user.CreatedByAdmin)
+		if err != nil {
+			return apperror.New(apperror.CodeDBError, "query insert users gagal", err)
+		}
 
-	return nil
+		if user.Username != nil {
+			_, err = tx.ExecContext(ctx, `INSERT INTO username_history(username) VALUES(?)`, user.Username)
+			if err != nil {
+				return apperror.New(apperror.CodeDBError, "query insert username_history gagal", err)
+			}
+		}
+
+		_, err = tx.ExecContext(ctx, `INSERT INTO email_history(email) VALUES(?)`, user.Email)
+		if err != nil {
+			return apperror.New(apperror.CodeDBError, "query insert email_history gagal", err)
+		}
+
+		stmt, err := tx.PrepareContext(ctx, `INSERT INTO user_roles(user_id, role_id) VALUES(?, ?)`)
+		if err != nil {
+			return apperror.New(apperror.CodeDBPrepareError, "gagal prepare insert user_roles", err)
+		}
+		defer stmt.Close()
+
+		for _, r := range user.Roles {
+			_, err := stmt.ExecContext(ctx, user.ID, r.ID)
+			if err != nil {
+				return apperror.New(apperror.CodeDBError,
+					fmt.Sprintf("query insert user_roles gagal untuk role_id: %s", r.ID), err)
+			}
+		}
+
+		return nil
+	})
 }
 
 func (r *userRepository) FindByEmail(ctx context.Context, email string) (*model.UserModel, error) {
+	query := `SELECT id, username, email, password, google_id, is_verified, created_by_admin FROM users WHERE email = ?`
 	var user model.UserModel
-	var googleID sql.NullString
-	user.GoogleID = &googleID.String
+	var username, password, googleID sql.NullString
 
-	err := r.db.QueryRowContext(ctx, `SELECT google_id, is_verified, created_by_admin FROM users WHERE email = ?`, email).
-		Scan(&user.GoogleID, &user.IsVerified, &user.CreatedByAdmin)
+	err := r.db.QueryRowContext(ctx, query, email).Scan(
+		&user.ID, &username, &user.Email, &password, &googleID, &user.IsVerified, &user.CreatedByAdmin,
+	)
+
 	if err != nil {
-		return nil, apperror.New(apperror.CodeDBError, "query find by email gagal", err)
+		return nil, err
+	}
+
+	if username.Valid {
+		user.Username = &username.String
+	}
+
+	if password.Valid {
+		user.Password = &password.String
+	}
+
+	if googleID.Valid {
+		user.GoogleID = &googleID.String
+	}
+
+	rolesQuery := `SELECT r.id, r.name FROM roles r INNER JOIN user_roles ur ON ur.role_id = r.id WHERE ur.user_id = ?`
+	rows, err := r.db.QueryContext(ctx, rolesQuery, user.ID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var role model.RoleModel
+		if err := rows.Scan(&role.ID, &role.Name); err != nil {
+			return nil, err
+		}
+		user.Roles = append(user.Roles, role)
 	}
 
 	return &user, nil

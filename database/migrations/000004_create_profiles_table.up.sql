@@ -4,6 +4,7 @@ CREATE TABLE profiles (
   full_name VARCHAR(125) NOT NULL,
   address TEXT,
   gender ENUM('laki-laki', 'perempuan'),
+
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 

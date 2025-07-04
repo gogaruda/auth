@@ -29,7 +29,7 @@ func InitBootstrap(db *sql.DB, config *config.AppConfig) *Service {
 	userService := service.NewUserService(userRepo)
 	emailService := service.NewEmailVerificationService(emailRepo, mail, ut, config.Mail, userService)
 	authService := service.NewAuthService(authRepo, roleRepo, config, ut, emailService)
-	googleService := service.NewGoogleAuthService(userRepo, config, ut)
+	googleService := service.NewGoogleAuthService(userRepo, roleRepo, authRepo, config, ut)
 
 	newMiddleware := middleware.NewMiddleware(db, config.JWT, config.Cors)
 	return &Service{
