@@ -1,6 +1,8 @@
 package config
 
 import (
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
 	"os"
 	"strconv"
 	"strings"
@@ -14,6 +16,7 @@ type AppConfig struct {
 	Mode   GinModeConfig
 	Cors   CORSConfig
 	Mail   EmailConfig
+	Google *oauth2.Config
 }
 
 func LoadConfig() *AppConfig {
@@ -49,6 +52,16 @@ func LoadConfig() *AppConfig {
 			MailPassword:    os.Getenv("MAIL_PASSWORD"),
 			MailFromAddress: os.Getenv("MAIL_FROM_ADDRESS"),
 			FrontVerifyUrl:  os.Getenv("FRONTEND_VERIFY_URL"),
+		},
+		Google: &oauth2.Config{
+			ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
+			ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
+			RedirectURL:  os.Getenv("GOOGLE_REDIRECT_URL"),
+			Scopes: []string{
+				"https://www.googleapis.com/auth/userinfo.email",
+				"https://www.googleapis.com/auth/userinfo.profile",
+			},
+			Endpoint: google.Endpoint,
 		},
 	}
 }

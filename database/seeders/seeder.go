@@ -5,12 +5,12 @@ import (
 	"github.com/gogaruda/auth/pkg/utils"
 )
 
-func SeedRun(db *sql.DB, newID *utils.ULIDCreate, hash *utils.BcryptHasher) error {
-	if err := Roles(db, newID); err != nil {
+func SeedRun(db *sql.DB, ut utils.Utils) error {
+	if err := Roles(db, ut); err != nil {
 		return err
 	}
 
-	if err := Users(db, newID, hash); err != nil {
+	if err := Users(db, ut); err != nil {
 		return err
 	}
 

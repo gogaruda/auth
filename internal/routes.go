@@ -14,12 +14,15 @@ func RouteRegister(r *gin.Engine, app *bootstrap.Service) {
 
 	authHandler := handler.NewAuthHandler(app.AuthService, v)
 	emailHandler := handler.NewEmailVerificationHandler(app.EmailVerificationService)
+	googleHandler := handler.NewGoogleAuthHandler(app.GoogleAuthService)
 
 	r.Use(app.Middleware.CORSMiddleware())
 	api := r.Group("/api")
 	api.POST("/register", authHandler.Register)
 	api.GET("/email-verification", emailHandler.VerifyEmail)
 	api.POST("/login", authHandler.Login)
+	api.GET("/google/login", googleHandler.GoogleLogin)
+	api.GET("/google/callback", googleHandler.GoogleCallback)
 
 	auth := api.Group("/")
 	auth.Use(app.Middleware.AuthMiddleware())

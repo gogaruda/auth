@@ -1,3 +1,11 @@
+GET http://localhost:8080/api/google/callback?state=state-random&code=4%2F0AVMBsJhu0IBHaczexyObw0SXWb6yT19k1jeCdNpHcjFR9kiDYiVVbT6tqR1AZ86XhoQ5Mg&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+openid&authuser=0&prompt=consent
+Accept: application/json
+
+###
+GET http://localhost:8080/api/google/login
+Accept: application/json
+
+###
 POST http://localhost:8080/api/logout
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTE1Mzk0MDksImlhdCI6MTc1MTUzODUwOSwiaXNfdmVyaWZpZWQiOnRydWUsInJvbGVzIjpbInRhbXUiXSwidG9rZW5fdmVyc2lvbiI6IjAxSlo3WDk5Vk5FUlNaUDk1WUdINFM0Qk5QIiwidXNlcl9pZCI6IjAxSlo3WDFCWUhIM0NSUzFKMEJHUjhDN1RSIn0.RNJrS3t5myZi1tfo1y1WjA1jYkonmY0sirsy-2qRswk
 

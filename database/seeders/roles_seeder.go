@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func Roles(db *sql.DB, newID *utils.ULIDCreate) error {
+func Roles(db *sql.DB, ut utils.Utils) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -22,7 +22,7 @@ func Roles(db *sql.DB, newID *utils.ULIDCreate) error {
 
 		roles := []string{"super admin", "tamu"}
 		for _, r := range roles {
-			_, err := stmt.ExecContext(ctx, newID.Create(), r)
+			_, err := stmt.ExecContext(ctx, ut.GenerateULID(), r)
 			if err != nil {
 				return fmt.Errorf("gagal insert roles: %w", err)
 			}

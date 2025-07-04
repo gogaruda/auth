@@ -18,10 +18,8 @@ func main() {
 		log.Fatal("koneksi ke database gagal:", err)
 	}
 
-	newID := utils.NewULIDCreate()
-	hash := utils.NewBcryptHasher()
-
-	if err := seeder.SeedRun(db, newID, hash); err != nil {
+	ut := utils.NewUtils(cfg)
+	if err := seeder.SeedRun(db, ut); err != nil {
 		log.Fatalf("seeding gagal: %w", err)
 	}
 

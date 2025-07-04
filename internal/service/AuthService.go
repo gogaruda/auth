@@ -20,21 +20,17 @@ type AuthService interface {
 type authService struct {
 	authRepo repository.AuthRepository
 	config   *config.AppConfig
-	hash     utils.Hash
-	jwt      utils.JWTs
-	id       utils.ULIDs
+	ut       utils.Utils
 	email    EmailVerificationService
 }
 
 func NewAuthService(
 	a repository.AuthRepository,
 	cfg *config.AppConfig,
-	h utils.Hash,
-	j utils.JWTs,
-	i utils.ULIDs,
+	u utils.Utils,
 	e EmailVerificationService,
 ) AuthService {
-	return &authService{authRepo: a, config: cfg, hash: h, jwt: j, id: i, email: e}
+	return &authService{authRepo: a, config: cfg, email: e, ut: u}
 }
 
 func (s *authService) Register(ctx context.Context, req request.RegisterRequest) error {
@@ -59,12 +55,12 @@ func (s *authService) Register(ctx context.Context, req request.RegisterRequest)
 		return err
 	}
 
-	hashPass, _ := s.hash.Generate(req.Password)
+	hashPass, _ := s.ut.GenerateHash(req.Password)
 	user := model.UserModel{
-		ID:       s.id.Create(),
+		ID:       s.ut.GenerateULID(),
 		Username: req.Username,
 		Email:    req.Email,
-		Password: hashPass,
+		Password: &hashPass,
 		Roles:    roles,
 	}
 
@@ -81,11 +77,11 @@ func (s *authService) Register(ctx context.Context, req request.RegisterRequest)
 
 func (s *authService) Login(ctx context.Context, req request.LoginRequest) (string, error) {
 	user, err := s.authRepo.Identifier(ctx, req.Identifier)
-	if err != nil || !s.hash.Compare(user.Password, req.Password) {
+	if err != nil || !s.ut.CompareHash(*user.Password, req.Password) {
 		return "", err
 	}
 
-	newVersion := s.id.Create()
+	newVersion := s.ut.GenerateULID()
 	if err := s.authRepo.UpdateTokenVersion(user.ID, newVersion); err != nil {
 		return "", err
 	}
@@ -95,7 +91,7 @@ func (s *authService) Login(ctx context.Context, req request.LoginRequest) (stri
 		roles = append(roles, r.Name)
 	}
 
-	token, err := s.jwt.Create(user.ID, newVersion, user.IsVerified, roles, s.config)
+	token, err := s.ut.GenerateJWT(user.ID, newVersion, user.IsVerified, roles, s.config)
 	if err != nil {
 		return "", apperror.New(apperror.CodeInternalError, "gagal buat JWT", err)
 	}
@@ -104,7 +100,7 @@ func (s *authService) Login(ctx context.Context, req request.LoginRequest) (stri
 }
 
 func (s *authService) Logout(userID string) error {
-	if err := s.authRepo.UpdateTokenVersion(userID, s.id.Create()); err != nil {
+	if err := s.authRepo.UpdateTokenVersion(userID, s.ut.GenerateULID()); err != nil {
 		return err
 	}
 

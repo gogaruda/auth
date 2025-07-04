@@ -6,17 +6,7 @@ import (
 	"time"
 )
 
-type JWTs interface {
-	Create(userID, tokenVersion string, isVerified bool, roles []string, cfg *config.AppConfig) (string, error)
-}
-
-type JWTGenerated struct{}
-
-func NewJWTGenerated() *JWTGenerated {
-	return &JWTGenerated{}
-}
-
-func (j *JWTGenerated) Create(userID, tokenVersion string, isVerified bool, roles []string, cfg *config.AppConfig) (string, error) {
+func (u *utils) GenerateJWT(userID, tokenVersion string, isVerified bool, roles []string, cfg *config.AppConfig) (string, error) {
 	now := time.Now()
 	claims := jwt.MapClaims{
 		"user_id":       userID,

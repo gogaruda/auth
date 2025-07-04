@@ -14,26 +14,27 @@ type Service struct {
 	AuthService              service.AuthService
 	Middleware               middleware.Middleware
 	EmailVerificationService service.EmailVerificationService
+	GoogleAuthService        service.GoogleAuthService
 }
 
 func InitBootstrap(db *sql.DB, config *config.AppConfig) *Service {
-	hasher := utils.NewBcryptHasher()
-	jwt := utils.NewJWTGenerated()
-	id := utils.NewULIDCreate()
 	mail := mailer.NewMailer(config.Mail)
+	ut := utils.NewUtils(config)
 
 	userRepo := repository.NewUserRepository(db)
 	emailRepo := repository.NewEmailVerificationRepository(db)
 	authRepo := repository.NewAuthRepository(db)
 
 	userService := service.NewUserService(userRepo)
-	emailService := service.NewEmailVerificationService(emailRepo, mail, id, config.Mail, userService)
-	authService := service.NewAuthService(authRepo, config, hasher, jwt, id, emailService)
+	emailService := service.NewEmailVerificationService(emailRepo, mail, ut, config.Mail, userService)
+	authService := service.NewAuthService(authRepo, config, ut, emailService)
+	googleService := service.NewGoogleAuthService(userRepo, config, ut)
 
 	newMiddleware := middleware.NewMiddleware(db, config.JWT, config.Cors)
 	return &Service{
 		AuthService:              authService,
 		Middleware:               newMiddleware,
 		EmailVerificationService: emailService,
+		GoogleAuthService:        googleService,
 	}
 }

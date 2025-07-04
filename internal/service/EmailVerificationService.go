@@ -20,7 +20,7 @@ type EmailVerificationService interface {
 type emailVerificationService struct {
 	evRepo      repository.EmailVerificationRepository
 	mail        mailer.Mailer
-	id          utils.ULIDs
+	ut          utils.Utils
 	cMail       config.EmailConfig
 	userService UserService
 }
@@ -28,16 +28,16 @@ type emailVerificationService struct {
 func NewEmailVerificationService(
 	ev repository.EmailVerificationRepository,
 	t mailer.Mailer,
-	i utils.ULIDs,
+	u utils.Utils,
 	c config.EmailConfig,
-	u UserService,
+	us UserService,
 ) EmailVerificationService {
 	return &emailVerificationService{
 		evRepo:      ev,
 		mail:        t,
-		id:          i,
+		ut:          u,
 		cMail:       c,
-		userService: u,
+		userService: us,
 	}
 }
 
@@ -48,7 +48,7 @@ func (s *emailVerificationService) SendVerification(ctx context.Context, user mo
 	}
 
 	ev := &model.EmailVerificationModel{
-		ID:        s.id.Create(),
+		ID:        s.ut.GenerateULID(),
 		UserID:    user.ID,
 		Token:     tok,
 		ExpiresAt: time.Now().UTC().Add(30 * time.Minute),

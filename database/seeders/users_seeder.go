@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func Users(db *sql.DB, newID *utils.ULIDCreate, hash *utils.BcryptHasher) error {
+func Users(db *sql.DB, ut utils.Utils) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -20,10 +20,10 @@ func Users(db *sql.DB, newID *utils.ULIDCreate, hash *utils.BcryptHasher) error 
 			return fmt.Errorf("query roles gagal: %w", err)
 		}
 
-		userID := newID.Create()
-		passHash, _ := hash.Generate("superadmin")
-		_, err = tx.ExecContext(ctx, `INSERT INTO users(id, username, email, password, is_verified) VALUES(?, ?, ?, ?, ?)`,
-			userID, "superadmin", "superadmin@gmail.com", passHash, true)
+		userID := ut.GenerateULID()
+		passHash, _ := ut.GenerateHash("superadmin")
+		_, err = tx.ExecContext(ctx, `INSERT INTO users(id, username, email, password, is_verified, created_by_admin) VALUES(?, ?, ?, ?, ?, ?)`,
+			userID, "superadmin", "superadmin@gmail.com", passHash, true, false)
 		if err != nil {
 			return fmt.Errorf("query insert users gagal: %w", err)
 		}
@@ -50,7 +50,7 @@ func Users(db *sql.DB, newID *utils.ULIDCreate, hash *utils.BcryptHasher) error 
 		}
 
 		_, err = tx.ExecContext(ctx, `INSERT INTO profiles(id, user_id, full_name, address, gender) VALUES(?, ?, ?, ?, ?)`,
-			newID.Create(), userID, "Saya Super Admin Pertama", "Samarang - Garut", 1)
+			ut.GenerateULID(), userID, "Saya Super Admin Pertama", "Samarang - Garut", 1)
 		if err != nil {
 			return fmt.Errorf("query insert profiles gagal: %w", err)
 		}
