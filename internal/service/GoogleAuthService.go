@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"github.com/gogaruda/apperror"
 	"github.com/gogaruda/auth/internal/config"
 	"github.com/gogaruda/auth/internal/model"
@@ -52,7 +53,7 @@ func (s *googleAuthService) Callback(ctx context.Context, code string) (string, 
 	user, err := s.userRepo.FindByEmail(ctx, email)
 	if err != nil {
 		// Buat user baru
-		if err == sql.ErrNoRows {
+		if errors.Is(err, sql.ErrNoRows) {
 			user = &model.UserModel{
 				ID:             s.ut.GenerateULID(),
 				Username:       s.ut.GenerateUsernameFromName(userInfo.Name),
@@ -67,8 +68,9 @@ func (s *googleAuthService) Callback(ctx context.Context, code string) (string, 
 			if err := s.userRepo.Create(ctx, *user); err != nil {
 				return "", err
 			}
+		} else {
+			return "", err
 		}
-		return "", err
 	} else {
 		// User sudah ada
 		if user.GoogleID == nil {

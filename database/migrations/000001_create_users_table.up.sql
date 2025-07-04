@@ -1,6 +1,6 @@
 CREATE TABLE users (
   id VARCHAR(26) NOT NULL PRIMARY KEY,
-  username VARCHAR(255) NOT NULL UNIQUE,
+  username VARCHAR(255) UNIQUE,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255),
   token_version VARCHAR(26),

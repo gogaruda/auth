@@ -19,6 +19,7 @@ type AuthService interface {
 
 type authService struct {
 	authRepo repository.AuthRepository
+	roleRepo repository.RoleRepository
 	config   *config.AppConfig
 	ut       utils.Utils
 	email    EmailVerificationService
@@ -26,11 +27,12 @@ type authService struct {
 
 func NewAuthService(
 	a repository.AuthRepository,
+	r repository.RoleRepository,
 	cfg *config.AppConfig,
 	u utils.Utils,
 	e EmailVerificationService,
 ) AuthService {
-	return &authService{authRepo: a, config: cfg, email: e, ut: u}
+	return &authService{authRepo: a, roleRepo: r, config: cfg, email: e, ut: u}
 }
 
 func (s *authService) Register(ctx context.Context, req request.RegisterRequest) error {
@@ -50,7 +52,7 @@ func (s *authService) Register(ctx context.Context, req request.RegisterRequest)
 		return apperror.New(apperror.CodeEmailConflict, "email sudah terdaftar", errors.New("email sudah terdaftar"))
 	}
 
-	roles, err := s.authRepo.CheckRoles(ctx, req.Roles)
+	roles, err := s.roleRepo.CheckRoles(ctx, req.Roles)
 	if err != nil {
 		return err
 	}
@@ -58,7 +60,7 @@ func (s *authService) Register(ctx context.Context, req request.RegisterRequest)
 	hashPass, _ := s.ut.GenerateHash(req.Password)
 	user := model.UserModel{
 		ID:       s.ut.GenerateULID(),
-		Username: req.Username,
+		Username: &req.Username,
 		Email:    req.Email,
 		Password: &hashPass,
 		Roles:    roles,

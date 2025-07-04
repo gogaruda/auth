@@ -24,10 +24,11 @@ func InitBootstrap(db *sql.DB, config *config.AppConfig) *Service {
 	userRepo := repository.NewUserRepository(db)
 	emailRepo := repository.NewEmailVerificationRepository(db)
 	authRepo := repository.NewAuthRepository(db)
+	roleRepo := repository.NewRoleRepository(db)
 
 	userService := service.NewUserService(userRepo)
 	emailService := service.NewEmailVerificationService(emailRepo, mail, ut, config.Mail, userService)
-	authService := service.NewAuthService(authRepo, config, ut, emailService)
+	authService := service.NewAuthService(authRepo, roleRepo, config, ut, emailService)
 	googleService := service.NewGoogleAuthService(userRepo, config, ut)
 
 	newMiddleware := middleware.NewMiddleware(db, config.JWT, config.Cors)
