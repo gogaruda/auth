@@ -5,11 +5,13 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/gogaruda/apperror"
+	"github.com/gogaruda/auth/internal/dto/response"
 	"github.com/gogaruda/auth/internal/model"
 	"github.com/gogaruda/dbtx"
 )
 
 type UserRepository interface {
+	GetAll(ctx context.Context, limit, offset int) ([]response.UserResponse, int, error)
 	Create(ctx context.Context, user model.UserModel) error
 	FindByEmail(ctx context.Context, email string) (*model.UserModel, error)
 	FindByID(ctx context.Context, userID string) (*model.UserModel, error)
@@ -23,6 +25,93 @@ type userRepository struct {
 
 func NewUserRepository(db *sql.DB) UserRepository {
 	return &userRepository{db: db}
+}
+
+func (r *userRepository) GetAll(ctx context.Context, limit, offset int) ([]response.UserResponse, int, error) {
+	var total int
+	queryCount := `
+				SELECT COUNT(DISTINCT u.id) AS total
+				FROM users u
+				JOIN user_roles ur ON u.id = ur.user_id
+				JOIN roles r ON r.id = ur.role_id
+				WHERE r.name NOT IN (?, ?)
+			`
+	err := r.db.QueryRowContext(ctx, queryCount, "super admin", "admin").Scan(&total)
+	if err != nil {
+		return nil, 0, apperror.New(apperror.CodeDBError, "query count users gagal", err)
+	}
+
+	queryUsers := `
+		SELECT 
+			u.id, u.username, u.email, u.google_id, u.is_verified, u.created_by_admin,
+			r.id AS role_id, r.name AS role_name
+		FROM users u 
+		JOIN user_roles ur ON u.id = ur.user_id
+		JOIN roles r ON r.id = ur.role_id
+		WHERE u.id NOT IN (
+			SELECT ur.user_id 
+			FROM user_roles ur
+			JOIN roles r ON r.id = ur.role_id
+			WHERE r.name IN (?,?)
+		)
+		ORDER BY u.updated_at DESC
+		LIMIT ? OFFSET ?
+	`
+
+	rows, err := r.db.QueryContext(ctx, queryUsers, "super admin", "admin", limit, offset)
+	if err != nil {
+		return nil, 0, apperror.New(apperror.CodeDBError, "query select users gagal", err)
+	}
+	defer rows.Close()
+
+	userMap := make(map[string]*response.UserResponse)
+	var orderedIDs []string
+
+	for rows.Next() {
+		var (
+			id, roleID, roleName       string
+			username, googleID         sql.NullString
+			email                      string
+			isVerified, createdByAdmin bool
+		)
+
+		if err := rows.Scan(&id, &username, &email, &googleID, &isVerified, &createdByAdmin, &roleID, &roleName); err != nil {
+			return nil, 0, apperror.New(apperror.CodeDBError, "gagal scan users", err)
+		}
+
+		user, exists := userMap[id]
+		if !exists {
+			user = &response.UserResponse{
+				ID:             id,
+				Email:          email,
+				IsVerified:     isVerified,
+				CreatedByAdmin: createdByAdmin,
+				Roles:          []response.RoleResponse{},
+			}
+
+			if username.Valid {
+				user.Username = &username.String
+			}
+			if googleID.Valid {
+				user.GoogleID = &googleID.String
+			}
+
+			userMap[id] = user
+			orderedIDs = append(orderedIDs, id)
+		}
+
+		user.Roles = append(user.Roles, response.RoleResponse{
+			ID:   roleID,
+			Name: roleName,
+		})
+	}
+
+	var users []response.UserResponse
+	for _, id := range orderedIDs {
+		users = append(users, *userMap[id])
+	}
+
+	return users, total, nil
 }
 
 func (r *userRepository) Create(ctx context.Context, user model.UserModel) error {

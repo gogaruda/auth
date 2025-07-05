@@ -20,7 +20,7 @@ func Roles(db *sql.DB, ut utils.Utils) error {
 		}
 		defer stmt.Close()
 
-		roles := []string{"super admin", "tamu"}
+		roles := []string{"super admin", "admin", "editor", "penulis", "tamu"}
 		for _, r := range roles {
 			_, err := stmt.ExecContext(ctx, ut.GenerateULID(), r)
 			if err != nil {

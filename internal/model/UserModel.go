@@ -10,4 +10,5 @@ type UserModel struct {
 	IsVerified     bool
 	CreatedByAdmin bool
 	Roles          []RoleModel
+	Profile        *ProfileModel
 }

@@ -1,0 +1,28 @@
+### Ambil semua data users
+GET http://localhost:8080/api/users?page=1&limit=20
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTE3MTMzMTksImlhdCI6MTc1MTcxMjQxOSwiaXNfdmVyaWZpZWQiOnRydWUsInJvbGVzIjpbInN1cGVyIGFkbWluIl0sInRva2VuX3ZlcnNpb24iOiIwMUpaRDM0S0dWNDBIU0czMVpQU1I4WkpYRSIsInVzZXJfaWQiOiIwMUpaQ1NLQjQzS01HMlNEQjBGQ0Q0SDNBRiJ9.6-RzhPcGOJtx1QD43kAYcMs4XV2IIIRQ-jNf-arQkbQ
+
+###
+GET http://localhost:8080/api/coba-verify
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTE3MTMzMTksImlhdCI6MTc1MTcxMjQxOSwiaXNfdmVyaWZpZWQiOnRydWUsInJvbGVzIjpbInN1cGVyIGFkbWluIl0sInRva2VuX3ZlcnNpb24iOiIwMUpaRDM0S0dWNDBIU0czMVpQU1I4WkpYRSIsInVzZXJfaWQiOiIwMUpaQ1NLQjQzS01HMlNEQjBGQ0Q0SDNBRiJ9.6-RzhPcGOJtx1QD43kAYcMs4XV2IIIRQ-jNf-arQkbQ
+
+### Login
+POST http://localhost:8080/api/login
+Content-Type: application/json
+
+{
+  "identifier": "superadmin",
+  "password": "superadmin"
+}
+
+### Buat user baru
+POST http://localhost:8080/api/users/create
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTE3MTMzMTksImlhdCI6MTc1MTcxMjQxOSwiaXNfdmVyaWZpZWQiOnRydWUsInJvbGVzIjpbInN1cGVyIGFkbWluIl0sInRva2VuX3ZlcnNpb24iOiIwMUpaRDM0S0dWNDBIU0czMVpQU1I4WkpYRSIsInVzZXJfaWQiOiIwMUpaQ1NLQjQzS01HMlNEQjBGQ0Q0SDNBRiJ9.6-RzhPcGOJtx1QD43kAYcMs4XV2IIIRQ-jNf-arQkbQ
+Content-Type: application/json
+
+{
+  "username": "fingkana",
+  "email": "fingkana@gmail.com",
+  "password": "fingkana@gmail.com",
+  "roles": ["penulis", "editor"]
+}

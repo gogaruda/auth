@@ -15,6 +15,7 @@ type Service struct {
 	Middleware               middleware.Middleware
 	EmailVerificationService service.EmailVerificationService
 	GoogleAuthService        service.GoogleAuthService
+	UserService              service.UserService
 }
 
 func InitBootstrap(db *sql.DB, config *config.AppConfig) *Service {
@@ -26,7 +27,7 @@ func InitBootstrap(db *sql.DB, config *config.AppConfig) *Service {
 	authRepo := repository.NewAuthRepository(db)
 	roleRepo := repository.NewRoleRepository(db)
 
-	userService := service.NewUserService(userRepo)
+	userService := service.NewUserService(userRepo, authRepo, roleRepo, ut)
 	emailService := service.NewEmailVerificationService(emailRepo, mail, ut, config.Mail, userService)
 	authService := service.NewAuthService(authRepo, roleRepo, config, ut, emailService)
 	googleService := service.NewGoogleAuthService(userRepo, roleRepo, authRepo, config, ut)
@@ -37,5 +38,6 @@ func InitBootstrap(db *sql.DB, config *config.AppConfig) *Service {
 		Middleware:               newMiddleware,
 		EmailVerificationService: emailService,
 		GoogleAuthService:        googleService,
+		UserService:              userService,
 	}
 }

@@ -49,8 +49,8 @@ func Users(db *sql.DB, ut utils.Utils) error {
 			return fmt.Errorf("query insert email history gagal: %w", err)
 		}
 
-		_, err = tx.ExecContext(ctx, `INSERT INTO profiles(id, user_id, full_name, address, gender) VALUES(?, ?, ?, ?, ?)`,
-			ut.GenerateULID(), userID, "Saya Super Admin Pertama", "Samarang - Garut", 1)
+		_, err = tx.ExecContext(ctx, `INSERT INTO profiles(id, user_id, full_name, address, gender, image) VALUES(?, ?, ?, ?, ?, ?)`,
+			ut.GenerateULID(), userID, "Saya Super Admin Pertama", "Samarang - Garut", 1, "assets/images/default.jpg")
 		if err != nil {
 			return fmt.Errorf("query insert profiles gagal: %w", err)
 		}
