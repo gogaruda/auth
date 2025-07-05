@@ -4,10 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gogaruda/apperror"
 	"github.com/gogaruda/auth/internal/dto/request"
+	dto "github.com/gogaruda/auth/internal/dto/response"
 	"github.com/gogaruda/auth/internal/service"
 	"github.com/gogaruda/auth/pkg/response"
 	"github.com/gogaruda/valigo"
-	"net/http"
 )
 
 type AuthHandler struct {
@@ -20,6 +20,7 @@ func NewAuthHandler(a service.AuthService, v *valigo.Valigo) *AuthHandler {
 }
 
 func (h *AuthHandler) Register(c *gin.Context) {
+	res := response.NewResponder(c)
 	var req request.RegisterRequest
 	req.Roles = []string{"tamu"}
 	if !h.valid.ValigoJSON(c, &req) {
@@ -31,10 +32,11 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		return
 	}
 
-	response.Created(c, nil, "registrasi berhasil")
+	res.Created(nil, "registrasi berhasil")
 }
 
 func (h *AuthHandler) Login(c *gin.Context) {
+	res := response.NewResponder(c)
 	var req request.LoginRequest
 	if !h.valid.ValigoJSON(c, &req) {
 		return
@@ -46,19 +48,18 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":   http.StatusOK,
-		"status": "success",
-		"token":  token,
-	})
+	res.OK(dto.LoginResponse{
+		Token: token,
+	}, "login berhasil", nil)
 }
 
 func (h *AuthHandler) Logout(c *gin.Context) {
+	res := response.NewResponder(c)
 	userID, _ := c.Get("user_id")
 	if err := h.authService.Logout(userID.(string)); err != nil {
 		apperror.HandleHTTPError(c, err)
 		return
 	}
 
-	response.OK(c, nil, "logout success!", nil)
+	res.OK(nil, "logout success!", nil)
 }

@@ -5,71 +5,86 @@ import (
 	"net/http"
 )
 
-func OK(c *gin.Context, data interface{}, message string, meta *MetaData) {
-	response := APIResponse{
-		Code:    http.StatusOK,
-		Status:  StatusSuccess,
-		Message: message,
-		Data:    data,
-	}
-
-	if meta != nil {
-		response.Meta = *meta
-	}
-
-	c.JSON(http.StatusOK, response)
+type Responder interface {
+	OK(data interface{}, message string, meta *MetaData)
+	Created(data interface{}, message string)
+	NoContent()
+	BadRequest(errors interface{}, message string)
+	Unauthorized(message string)
+	Forbidden(message string)
+	NotFound(message string)
+	ServerError(message string)
 }
 
-func Created(c *gin.Context, data interface{}, message string) {
-	c.JSON(http.StatusCreated, APIResponse{
+type responder struct {
+	c *gin.Context
+}
+
+func NewResponder(c *gin.Context) Responder {
+	return &responder{c: c}
+}
+
+func (r *responder) OK(data interface{}, message string, meta *MetaData) {
+	response := APIResponse{
+		Code:    http.StatusOK,
+		Status:  "success",
+		Message: message,
+		Data:    data,
+		Meta:    meta,
+	}
+	r.c.JSON(http.StatusOK, response)
+}
+
+func (r *responder) Created(data interface{}, message string) {
+	r.c.JSON(http.StatusCreated, APIResponse{
 		Code:    http.StatusCreated,
-		Status:  StatusSuccess,
+		Status:  "success",
 		Message: message,
 		Data:    data,
 	})
 }
 
-func NoContent(c *gin.Context) {
-	c.Status(http.StatusNoContent)
+func (r *responder) NoContent() {
+	r.c.Status(http.StatusNoContent)
 }
 
-func BadRequest(c *gin.Context, errors interface{}, message string) {
-	c.AbortWithStatusJSON(http.StatusBadRequest, APIResponse{
+func (r *responder) BadRequest(errors interface{}, message string) {
+	r.c.AbortWithStatusJSON(http.StatusBadRequest, APIResponse{
 		Code:    http.StatusBadRequest,
-		Status:  StatusError,
+		Status:  "error",
 		Message: message,
 		Errors:  errors,
 	})
 }
 
-func Unauthorized(c *gin.Context, message string) {
-	c.AbortWithStatusJSON(http.StatusUnauthorized, APIResponse{
+func (r *responder) Unauthorized(message string) {
+	r.c.AbortWithStatusJSON(http.StatusUnauthorized, APIResponse{
 		Code:    http.StatusUnauthorized,
-		Status:  StatusError,
+		Status:  "error",
 		Message: message,
 	})
 }
 
-func Forbidden(c *gin.Context, message string) {
-	c.AbortWithStatusJSON(http.StatusForbidden, APIResponse{
+func (r *responder) Forbidden(message string) {
+	r.c.AbortWithStatusJSON(http.StatusForbidden, APIResponse{
 		Code:    http.StatusForbidden,
-		Status:  StatusError,
+		Status:  "error",
 		Message: message,
 	})
 }
 
-func NotFound(c *gin.Context, message string) {
-	c.AbortWithStatusJSON(http.StatusNotFound, APIResponse{
+func (r *responder) NotFound(message string) {
+	r.c.AbortWithStatusJSON(http.StatusNotFound, APIResponse{
 		Code:    http.StatusNotFound,
-		Status:  StatusError,
+		Status:  "error",
 		Message: message,
 	})
 }
 
-func ServerError(c *gin.Context, message string) {
-	c.AbortWithStatusJSON(http.StatusInternalServerError, APIResponse{
+func (r *responder) ServerError(message string) {
+	r.c.AbortWithStatusJSON(http.StatusInternalServerError, APIResponse{
 		Code:    http.StatusInternalServerError,
-		Status:  StatusError,
+		Status:  "error",
 		Message: message,
 	})
 }

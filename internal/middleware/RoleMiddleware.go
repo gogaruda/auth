@@ -15,20 +15,21 @@ const (
 
 func (m *middleware) RoleMiddleware(matchType RoleMatchType, requiredRoles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		res := response.NewResponder(c)
 		val, ok := c.Get("roles")
 		if !ok {
-			response.Unauthorized(c, "role tidak ditemukan pada context")
+			res.Unauthorized("role tidak ditemukan pada context")
 			return
 		}
 
 		userRoles, ok := val.([]string)
 		if !ok {
-			response.ServerError(c, "format roles tidak valid")
+			res.ServerError("format roles tidak valid")
 			return
 		}
 
 		if !matchRoles(userRoles, requiredRoles, matchType) {
-			response.Forbidden(c, "Anda tidak berhak mengakses halaman ini")
+			res.Forbidden("Anda tidak berhak mengakses halaman ini")
 			return
 		}
 

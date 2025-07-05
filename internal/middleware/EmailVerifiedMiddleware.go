@@ -7,15 +7,16 @@ import (
 
 func (m *middleware) EmailVerifiedMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		res := response.NewResponder(c)
 		isVerifiedRaw, exists := c.Get("is_verified")
 		if !exists {
-			response.Forbidden(c, "status verifikasi email tidak tersedia")
+			res.Forbidden("status verifikasi email tidak tersedia")
 			return
 		}
 
 		isVerified, ok := isVerifiedRaw.(bool)
 		if !ok || !isVerified {
-			response.Forbidden(c, "email belum diverifikasi")
+			res.Forbidden("email belum diverifikasi")
 			return
 		}
 

@@ -16,9 +16,10 @@ func NewEmailVerificationHandler(s service.EmailVerificationService) *EmailVerif
 }
 
 func (h *EmailVerificationHandler) VerifyEmail(c *gin.Context) {
+	res := response.NewResponder(c)
 	token := c.Query("token")
 	if token == "" {
-		response.BadRequest(c, nil, "token tidak boleh kosong")
+		res.BadRequest(nil, "token tidak boleh kosong")
 		return
 	}
 
@@ -27,5 +28,5 @@ func (h *EmailVerificationHandler) VerifyEmail(c *gin.Context) {
 		return
 	}
 
-	response.OK(c, nil, "Email berhasil di verifikasi", nil)
+	res.OK(nil, "Email berhasil di verifikasi", nil)
 }

@@ -17,14 +17,15 @@ func (m *middleware) AuthMiddleware() gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
+		res := response.NewResponder(c)
 		if authHeader == "" {
-			response.Unauthorized(c, "header authorized tidak ditemukan")
+			res.Unauthorized("header authorized tidak ditemukan")
 			return
 		}
 
 		parts := strings.Split(authHeader, " ")
 		if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
-			response.Unauthorized(c, "format authorization harus: bearer {token}")
+			res.Unauthorized("format authorization harus: bearer {token}")
 			return
 		}
 
@@ -37,48 +38,48 @@ func (m *middleware) AuthMiddleware() gin.HandlerFunc {
 		})
 
 		if err != nil || !token.Valid {
-			response.Unauthorized(c, "token tidak valid atau sudah kadaluarsa")
+			res.Unauthorized("token tidak valid atau sudah kadaluarsa")
 			return
 		}
 
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
-			response.Unauthorized(c, "klaim token tidak valid")
+			res.Unauthorized("klaim token tidak valid")
 			return
 		}
 
 		exp, ok := claims["exp"].(float64)
 		if !ok || int64(exp) < time.Now().Unix() {
-			response.Unauthorized(c, "token sudah kadaluarsa")
+			res.Unauthorized("token sudah kadaluarsa")
 			return
 		}
 
 		userID, ok := claims["user_id"].(string)
 		if !ok {
-			response.Unauthorized(c, "token tidak memiliki identitas pengguna (user_id)")
+			res.Unauthorized("token tidak memiliki identitas pengguna (user_id)")
 			return
 		}
 
 		tokenVersion, ok := claims["token_version"].(string)
 		if !ok {
-			response.Unauthorized(c, "token version tidak valid")
+			res.Unauthorized("token version tidak valid")
 			return
 		}
 
 		var user model.UserModel
 		if err := m.db.QueryRow(`SELECT token_version FROM users WHERE id = ?`, userID).Scan(&user.TokenVersion); err != nil {
-			response.Unauthorized(c, "user tidak ditemukan")
+			res.Unauthorized("user tidak ditemukan")
 			return
 		}
 
 		if *user.TokenVersion != tokenVersion {
-			response.Unauthorized(c, "token sudah tidak berlaku, silahkan login lagi!")
+			res.Unauthorized("token sudah tidak berlaku, silahkan login lagi!")
 			return
 		}
 
 		rolesInterface, ok := claims["roles"].([]interface{})
 		if !ok {
-			response.Unauthorized(c, "format roles dalam token tidak valid")
+			res.Unauthorized("format roles dalam token tidak valid")
 			return
 		}
 
@@ -86,7 +87,7 @@ func (m *middleware) AuthMiddleware() gin.HandlerFunc {
 		for _, r := range rolesInterface {
 			roleStr, ok := r.(string)
 			if !ok {
-				response.Unauthorized(c, "role tidak valid")
+				res.Unauthorized("role tidak valid")
 				return
 			}
 			roles = append(roles, roleStr)

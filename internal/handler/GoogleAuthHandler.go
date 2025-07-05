@@ -3,7 +3,9 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gogaruda/apperror"
+	dto "github.com/gogaruda/auth/internal/dto/response"
 	"github.com/gogaruda/auth/internal/service"
+	"github.com/gogaruda/auth/pkg/response"
 	"net/http"
 )
 
@@ -21,6 +23,7 @@ func (h *GoogleAuthHandler) GoogleLogin(c *gin.Context) {
 }
 
 func (h *GoogleAuthHandler) GoogleCallback(c *gin.Context) {
+	res := response.NewResponder(c)
 	code := c.Query("code")
 	token, err := h.service.Callback(c.Request.Context(), code)
 	if err != nil {
@@ -28,9 +31,7 @@ func (h *GoogleAuthHandler) GoogleCallback(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code":   http.StatusOK,
-		"status": "success",
-		"token":  token,
-	})
+	res.OK(dto.LoginResponse{
+		Token: token,
+	}, "login berhasil", nil)
 }

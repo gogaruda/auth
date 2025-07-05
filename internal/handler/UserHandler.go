@@ -20,6 +20,7 @@ func NewUserHandler(s service.UserService, v *valigo.Valigo) *UserHandler {
 }
 
 func (h *UserHandler) GetAllUsers(c *gin.Context) {
+	res := response.NewResponder(c)
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
 	offset := (page - 1) * limit
@@ -35,10 +36,12 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 		Page:  page,
 		Limit: limit,
 	}
-	response.OK(c, users, "query ok", &meta)
+
+	res.OK(users, "query ok", &meta)
 }
 
 func (h *UserHandler) CreateUser(c *gin.Context) {
+	res := response.NewResponder(c)
 	var req request.UserCreateRequest
 	if !h.valid.ValigoJSON(c, &req) {
 		return
@@ -49,5 +52,5 @@ func (h *UserHandler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	response.Created(c, nil, "user berhasil dibuat")
+	res.Created(nil, "user berhasil dibuat")
 }
